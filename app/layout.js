@@ -1,8 +1,11 @@
-
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import "./globals.css";
 import { Poppins } from "next/font/google";
+import Footer from "./components/Footer";
+import About from "./about/page";
+import Tips from "./tips/page";
+import Faqs from "./components/Faqs";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -18,11 +21,24 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.variable}  antialiased`}
-      >
-        <Navbar/>
-        {children}
+      <body className={`${poppins.variable} antialiased flex flex-col min-h-screen`}>
+        
+        {/* ✅ Navbar is Fully Static & Always Visible */}
+        <div className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
+          <Navbar />
+        </div>
+
+        {/* ✅ Content Scrolls Under the Navbar */}
+        <main className="flex-1 overflow-auto mt-[80px]">
+          {children}
+          <About />
+          <Tips/>
+          <Faqs/>
+        </main>
+
+        {/* ✅ Footer is Always at Bottom */}
+        <Footer />
+        
       </body>
     </html>
   );
