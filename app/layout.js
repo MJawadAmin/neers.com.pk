@@ -23,20 +23,20 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${poppins.variable} antialiased flex flex-col min-h-screen`}>
         
-        {/* ✅ Navbar is Fully Static & Always Visible */}
-        <div className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
+        {/* ✅ Navbar is Sticky & Always Visible, but has its Own Space */}
+        <div className="sticky top-0 left-0 w-full z-50 bg-white shadow-md">
           <Navbar />
         </div>
 
-        {/* ✅ Content Scrolls Under the Navbar */}
-        <main className="flex-1 overflow-auto mt-[80px]">
+        {/* ✅ Content Starts Below the Navbar */}
+        <main className="flex-1">
           {children}
           <About />
           <Tips/>
           <Faqs/>
         </main>
 
-        {/* ✅ Footer is Always at Bottom */}
+        {/* ✅ Footer Always at the Bottom */}
         <Footer />
         
       </body>

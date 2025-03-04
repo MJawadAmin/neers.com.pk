@@ -4,63 +4,72 @@ import Image from "next/image";
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi"; // Import icons
 
+import { FaArrowRight } from "react-icons/fa";
+import { usePathname } from "next/navigation";
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const pathname = usePathname();
   return (
-    <nav className="text-[rgb(166,172,183)] p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        
+    <nav className="text-[rgb(166,172,183)] p-4 h-28 shadow-gray-300">
+      <div className="container mx-auto flex justify-between items-center px-[120px]">
         {/* Logo */}
-        <Link href="/" className="ml-[175px]">
-          <Image src="/neeca-logo.webp" alt="Logo" width={61.5} height={30} />
+        <Link href="/" className=" ml-[15.5px] mt-[1px]">
+          <Image src="/neeca-logo.webp" alt="Logo" width={68.5} height={68.5}  />
         </Link>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-2xl focus:outline-none"
-        >
-          {isOpen ? <FiX /> : <FiMenu />}
-        </button>
+        {/* Navigation and Mobile Menu */}
+        <div className="flex justify-between w-full md:w-auto">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden text-2xl focus:outline-none"
+          >
+            {isOpen ? <FiX /> : <FiMenu />}
+          </button>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex ml-44 justify-center space-x-12 w-full">
-          <ul className="flex gap-12">
-            <li>
-              <Link href="/" className="hover:text-gray-400">
-                Home
-              </Link>
-            </li>
-            <li className="">
-              <Link href="/about" className="hover:text-gray-400">
-                About
-              </Link>
-            </li>
-            <li>
-              <Link href="/tips" className="hover:text-gray-400">
-                Tips
-              </Link>
-            </li>
-            <li>
-              <Link href="/news" className="hover:text-gray-400">
-                News
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/register"
-                className="hover:text-gray-400 text-white bg-[rgb(249,102,46)] px-5 py-2 rounded-md"
-              >
-                Register A Company
-              </Link>
-            </li>
-            <li>
-              <Link href="/signup" className="hover:text-gray-400">
-                Sign Up
-              </Link>
-            </li>
-          </ul>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex  ">
+          <ul className="hidden flex-col lg:flex lg:flex-row gap-[39px]  font-[500] text-lg mr-[0px] mt-[12px] items-start lg:items-center">
+      {[
+        { name: "Home", path: "/" },
+        { name: "About", path: "/about" },
+        { name: "Tips", path: "/tips" },
+        { name: "News", path: "/news" },
+        { name: "Products", path: "/products" },
+      ].map((item) => (
+        <li key={item.path}>
+          <Link
+            href={item.path}
+            className={`hover:text-[rgb(249,102,46)] ${
+              pathname === item.path ? "text-orange-500 font-[500]" : ""
+            }`}
+          >
+            {item.name}
+          </Link>
+        </li>
+      ))}
+
+      <li>
+        <Link
+          href="/register"
+          className="inline-flex items-center gap-2 hover:text-gray-100 text-white bg-[rgb(249,102,46)] px-[12px] py-[6px] rounded-md transition-transform duration-300 hover:-translate-y-2"
+
+        >
+          Register a company <FaArrowRight className="text-white text-2xl" />
+        </Link>
+      </li>
+      <li>
+        <Link
+          href="/register"
+          className={`hover:text-bg-[rgb(249,102,46)] ${
+            pathname === '/signin'? "text-[rgb(249,102,46)] font-semibold" : ""
+          }`}>
+          Sign in
+        </Link>
+      </li>
+    </ul>
+          </div>
         </div>
       </div>
     </nav>

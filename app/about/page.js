@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { FaArrowRight } from "react-icons/fa";
+import { GoArrowRight } from "react-icons/go";
 
 const About = () => {
   return (
@@ -26,15 +26,15 @@ Delivering the transition to energy-efficient lighting in residential, commercia
     </p>
     <ul className='w-[70vw] items-center ml-32 text-lg p-10'>
     <li className="flex items-center gap-2">
-      <FaArrowRight className="text-orange-500 text-2xl" /> 
+      <GoArrowRight className="text-orange-500 text-2xl" /> 
       Developing a National Efficient Lighting Strategy.
     </li>
 
       
-      <li className="flex items-center gap-2">    <FaArrowRight className="text-orange-500 text-2xl" /> Strengthening monitoring, verification, and enforcement (MVE) capacities in Pakistan to ensure an effective transition to efficient lighting. </li>
+      <li className="flex items-center gap-2">    <GoArrowRight className="text-orange-500 text-2xl" /> Strengthening monitoring, verification, and enforcement (MVE) capacities in Pakistan to ensure an effective transition to efficient lighting. </li>
       
-      <li className="flex items-center gap-2">    <FaArrowRight className="text-orange-500 text-2xl" />  Design for a 'Lighting Funding Window' in Pakistan's Revolving Loan Fund (RLF).</li>
-      <li className="flex items-center gap-2">    <FaArrowRight className="text-orange-500 text-2xl" /> Accelerating the use of light-emitting diodes (LEDs) and controls.</li>
+      <li className="flex items-center gap-2">    <GoArrowRight className="text-orange-500 text-2xl" />  Design for a 'Lighting Funding Window' in Pakistan's Revolving Loan Fund (RLF).</li>
+      <li className="flex items-center gap-2">    <GoArrowRight className="text-orange-500 text-2xl" /> Accelerating the use of light-emitting diodes (LEDs) and controls.</li>
     </ul>
     </div>
   )
