@@ -1,7 +1,7 @@
 "use client"; // Keep this at the top
 
 import React, { useState, useEffect } from "react";
-import { SiTicktick } from "react-icons/si";
+import { LuCircleCheckBig } from "react-icons/lu";
 import Image from "next/image";
 
 const Page = () => {
@@ -17,16 +17,16 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="bg-[rgb(255,246,243)] space-y-8">
+    <div className="bg-[rgb(255,246,243)] space-y-7">
       <span
         data-aos="fade-in"
-        className="flex justify-center items-center w-full pt-18 text-center text-gray-700 font-semibold 
-             text-xl md:text-3xl lg:text-[53px] px-4 lg:px-0"
+        className="flex justify-center items-center w-full pt-[70px] ml-[6.5px] text-center text-gray-700 font-semibold 
+             text-xl md:text-3xl lg:text-[53.3px] px-4 lg:px-0"
       >
         Lighten up your life with quality.
       </span>
 
-      <p className="text-xl text-[rgb(55,65,81)] font-semibold text-center">
+      <p className="text-xl text-[rgb(55,65,81)] font-[500] ml-[13px] mt-[-1px] text-center">
         Get the mental satisfaction of{" "}
         <span className="underline decoration-[rgb(249,102,46)] underline-offset-8">
           importing
@@ -38,16 +38,16 @@ const Page = () => {
         your product legally, regulated for energy efficiency.
       </p>
 
-      <div className="pb-20">
-        <ul className="flex justify-center gap-12">
+      <div className="pb-10 mt-11 ml-6">
+        <ul className="flex justify-center gap-10">
           <li className="flex items-center gap-2">
-            <SiTicktick className="text-orange-700" /> Simple registration
+            <LuCircleCheckBig className="text-[rgb(246,131,54)]" /> Simple registration
           </li>
           <li className="flex items-center gap-2">
-            <SiTicktick className="text-orange-700" /> Statistics Dashboard
+            <LuCircleCheckBig className="text-[rgb(246,131,54)]" /> Statistics Dashboard
           </li>
           <li className="flex items-center gap-2">
-            <SiTicktick className="text-orange-700" /> Products & orders management
+            <LuCircleCheckBig className="text-[rgb(246,131,54)]" /> Products & orders management
           </li>
         </ul>
       </div>

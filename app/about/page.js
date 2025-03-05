@@ -9,7 +9,7 @@ const About = () => {
       <Image src="/bulb.webp" alt="Logo" width={200} height={50} className="object-contain" />
     </div>
   
-      <h1 className='text-4xl p-20 text-center text-[rgb(55,65,81)]'>About NEECA</h1>
+      <h1 className='text-4xl  text-center text-[rgb(55,65,81)]'>About NEECA</h1>
       <p className='w-[70vw] items-center ml-32 text-lg'>The National Energy Efficiency & Conservation Authority (NEECA) is an attached Department of the Ministry of Energy (Power Division) and serves as the focal federal agency to capture substantial economic and environmental benefits through energy conservation and efficiency across all sectors of the economy.
       <br></br> <br></br>
 Delivering the transition to energy-efficient lighting in residential, commercial, industrial, and outdoor sectors in Pakistan.

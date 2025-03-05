@@ -23,3 +23,16 @@ body {
   background: var(--background);
   font-family: var(--font-poppins), sans-serif; /* Ensure it's applied */
 }
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;  /* Adjust width */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d5d0d0;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}

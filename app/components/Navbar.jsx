@@ -11,7 +11,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   return (
-    <nav className="text-[rgb(166,172,183)] p-4 h-28 shadow-gray-300">
+    <nav className="text-[rgb(166,172,183)] p-4 h-28 ">
       <div className="container mx-auto flex justify-between items-center px-[120px]">
         {/* Logo */}
         <Link href="/" className=" ml-[15.5px] mt-[1px]">
@@ -30,7 +30,7 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex  ">
-          <ul className="hidden flex-col lg:flex lg:flex-row gap-[39px]  font-[500] text-lg mr-[0px] mt-[12px] items-start lg:items-center">
+          <ul className="hidden flex-col lg:flex lg:flex-row gap-[39px]  font-[500] text-lg mr-[-3px] mt-[12px] items-start lg:items-center">
       {[
         { name: "Home", path: "/" },
         { name: "About", path: "/about" },
@@ -53,7 +53,7 @@ const Navbar = () => {
       <li>
         <Link
           href="/register"
-          className="inline-flex items-center gap-2 hover:text-gray-100 text-white bg-[rgb(249,102,46)] px-[12px] py-[6px] rounded-md transition-transform duration-300 hover:-translate-y-2"
+          className="inline-flex items-center gap-2 hover:text-gray-100 text-white bg-[rgb(249,102,46)] px-[13px] py-[6px] rounded-md transition-transform duration-300 hover:-translate-y-2"
 
         >
           Register a company <FaArrowRight className="text-white text-2xl" />
