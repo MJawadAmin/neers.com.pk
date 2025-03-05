@@ -24,10 +24,10 @@ export default function RootLayout({ children }) {
       <body className={`${poppins.variable} antialiased flex flex-col min-h-screen`}>
         
         {/* ✅ Navbar is Sticky & Always Visible, but has its Own Space */}
-        <div className="sticky top-0 left-0 w-full z-50 bg-white  shadow-[0_4px_6px_rgba(170,170,170,0.1)]
+        {/* <div className="sticky top-0 left-0 w-full z-50 bg-white  shadow-[0_4px_6px_rgba(170,170,170,0.1)]
 ">
           <Navbar />
-        </div>
+        </div> */}
 
         {/* ✅ Content Starts Below the Navbar */}
         <main className="flex-1">
