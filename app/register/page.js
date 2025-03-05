@@ -48,7 +48,7 @@ const Register = () => {
       <h3 className="text-center text-[#F76300] font-[531.5] text-lg lg:text-[33.5px] leading-[27px] font-poppins mb-4">
         Sign Up
       </h3>
-      <div className="flex flex-col md:flex-row h-auto md:h-screen w-full max-w-[91.5vw] shadow-black shadow-2xl rounded-lg overflow-hidden">
+      <div className="flex flex-col md:flex-row h-auto md:h-screen w-full max-w-[91.5vw]  shadow-[0_4px_6px_rgba(170,170,170,0.1)] rounded-lg overflow-hidden">
         <div className="w-full md:w-1/2 flex items-center justify-center bg-white p-6">
           <div className="w-full max-w-md">
             <input type="text" name="fake-user" autoComplete="off" style={{ display: "none" }} />

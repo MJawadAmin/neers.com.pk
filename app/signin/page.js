@@ -111,7 +111,7 @@ const Login = () => {
       </div>
       <span className="text-gray-700">Remember me</span>
     </label>
-              <button type="submit" className="w-full bg-orange-600 text-white py-2 cursor-pointer transition">
+              <button type="submit" className="w-full mt-10 bg-orange-500 text-white py-2 cursor-pointer transition">
                 Login
               </button>
             </form>
