@@ -51,36 +51,33 @@ const Register = () => {
       <div className="flex flex-col md:flex-row h-auto md:h-screen w-full max-w-[91.5vw] shadow-black shadow-2xl rounded-lg overflow-hidden">
         <div className="w-full md:w-1/2 flex items-center justify-center bg-white p-6">
           <div className="w-full max-w-md">
-            {/* Hidden Dummy Fields */}
             <input type="text" name="fake-user" autoComplete="off" style={{ display: "none" }} />
             <input type="password" name="fake-pass" autoComplete="off" style={{ display: "none" }} />
 
             <form autoComplete="off">
-              {[
-                { label: "User Name", name: "username_random_123", type: "text", placeholder: "Type User Name" },
-                { label: "Email Address", name: "useremail_hidden_abc", type: "email", placeholder: "Example@gmail.com" },
-              ].map(({ label, name, type, placeholder }) => (
-                <div key={name} className="mb-4">
-                  <label className="block">
-                    <span className="text-red-500">*</span> {label}
-                  </label>
-                  <input
-                    type={type}
-                    name={name}
-                    id={`input-${name}`}
-                    className="px-2 py-1 w-full focus:outline-none border border-gray-300 focus:border-red-400 rounded text-black placeholder:font-sans !placeholder:text-greyish-400"
-                    placeholder={placeholder}
-                    value={formData[name]}
-                    onChange={handleChange}
-                    autoComplete="new-password"
-                    readOnly
-                    onFocus={handleFocus}
-                  />
-                  {errors[name] && <p className="text-red-500 text-sm">{errors[name]}</p>}
-                </div>
+              {[{ label: "User Name", name: "username_random_123", type: "text", placeholder: "Type User Name" },
+                { label: "Email Address", name: "useremail_hidden_abc", type: "email", placeholder: "Example@gmail.com" }]
+                .map(({ label, name, type, placeholder }) => (
+                  <div key={name} className="mb-4">
+                    <label className="block">
+                      <span className="text-red-500">*</span> {label}
+                    </label>
+                    <input
+                      type={type}
+                      name={name}
+                      id={`input-${name}`}
+                      className="px-2 py-1 w-full focus:outline-none border border-gray-300 focus:border-red-400 rounded text-black placeholder:font-sans !placeholder:text-greyish-400"
+                      placeholder={placeholder}
+                      value={formData[name]}
+                      onChange={handleChange}
+                      autoComplete="new-password"
+                      readOnly
+                      onFocus={handleFocus}
+                    />
+                    {errors[name] && <p className="text-red-500 text-sm">{errors[name]}</p>}
+                  </div>
               ))}
 
-              {/* Phone Number Input */}
               <div className="mb-4">
                 <label className="block">
                   <span className="text-red-500">*</span> Phone Number
@@ -96,41 +93,33 @@ const Register = () => {
                 {errors.userphone_number_987 && <p className="text-red-500 text-sm">{errors.userphone_number_987}</p>}
               </div>
 
-              {/* Password & Confirm Password Fields */}
-              {[
-                { name: "userpassword_secret", label: "Password", state: showPassword, toggle: togglePassword },
-                { name: "userconfirmPassword_hidden", label: "Confirm Password", state: showConfirmPassword, toggle: toggleConfirmPassword },
-              ].map(({ name, label, state, toggle }) => (
-                <div key={name} className="mb-4 relative">
-                  <label className="block">
-                    <span className="text-red-500">*</span> {label}
-                  </label>
-                  <div className="relative">
-                    {/* Hidden input to prevent autofill */}
-                    <input type="text" name="fake-password" autoComplete="off" style={{ display: "none" }} />
-
-                    <input
-                      type={state ? "text" : "password"}
-                      name={name}
-                      id={`input-${name}`}
-                      className="px-2 py-1 w-full focus:outline-none border border-gray-300 rounded text-black placeholder:font-sans !placeholder:text-greyish-400"
-                      placeholder="Please use characters & symbols"
-                      value={formData[name]}
-                      onChange={handleChange}
-                      autoComplete="new-password"
-                      readOnly
-                      onFocus={handleFocus}
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
-                      onClick={toggle}
-                    >
-                      {state ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </button>
+              {[{ name: "userpassword_secret", label: "Password", state: showPassword, toggle: togglePassword },
+                { name: "userconfirmPassword_hidden", label: "Confirm Password", state: showConfirmPassword, toggle: toggleConfirmPassword }]
+                .map(({ name, label, state, toggle }) => (
+                  <div key={name} className="mb-4 relative">
+                    <label className="block">
+                      <span className="text-red-500">*</span> {label}
+                    </label>
+                    <div className="relative">
+                      <input type="text" name="fake-password" autoComplete="off" style={{ display: "none" }} />
+                      <input
+                        type={state ? "text" : "password"}
+                        name={name}
+                        id={`input-${name}`}
+                        className="px-2 py-1 w-full focus:outline-none border border-gray-300 rounded text-black placeholder:font-sans !placeholder:text-greyish-400"
+                        placeholder="Please use characters & symbols"
+                        value={formData[name]}
+                        onChange={handleChange}
+                        autoComplete="new-password"
+                        readOnly
+                        onFocus={handleFocus}
+                      />
+                      <button type="button" className="absolute right-3 top-3 text-gray-500 hover:text-gray-700" onClick={toggle}>
+                        {state ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </button>
+                    </div>
+                    {errors[name] && <p className="text-red-500 text-sm">{errors[name]}</p>}
                   </div>
-                  {errors[name] && <p className="text-red-500 text-sm">{errors[name]}</p>}
-                </div>
               ))}
 
               <button type="submit" className="w-full bg-orange-600 text-white py-2 cursor-pointer transition">
@@ -139,8 +128,6 @@ const Register = () => {
             </form>
           </div>
         </div>
-
-        {/* Right Side Image */}
         <div className="w-full md:w-1/2 h-64 md:h-auto relative">
           <Image src="/login.webp" alt="background" className="w-full h-full object-cover" width={500} height={500} />
         </div>
