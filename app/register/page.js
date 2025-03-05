@@ -44,8 +44,8 @@ const Register = () => {
   const toggleConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen w-full p-4">
-      <h3 className="text-center text-[#F76300] font-semibold text-lg lg:text-[30px] leading-[27px] font-poppins mb-4">
+    <div className="flex flex-col items-center justify-center h-screen w-full pt-[18.5px]">
+      <h3 className="text-center text-[#F76300] font-[531.5] text-lg lg:text-[33.5px] leading-[27px] font-poppins mb-4">
         Sign Up
       </h3>
       <div className="flex flex-col md:flex-row h-auto md:h-screen w-full max-w-[91.5vw] shadow-black shadow-2xl rounded-lg overflow-hidden">
@@ -66,7 +66,7 @@ const Register = () => {
                       type={type}
                       name={name}
                       id={`input-${name}`}
-                      className="px-2 py-1 w-full focus:outline-none border border-gray-300 focus:border-red-400 rounded text-black placeholder:font-sans !placeholder:text-greyish-400"
+                      className="px-2 py-1.5 w-full focus:outline-none border border-gray-300 focus:border-red-400 rounded text-black placeholder:font-sans !placeholder:text-greyish-400"
                       placeholder={placeholder}
                       value={formData[name]}
                       onChange={handleChange}
