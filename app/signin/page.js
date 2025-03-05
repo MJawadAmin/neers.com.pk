@@ -134,13 +134,8 @@ const Login = () => {
               
             </div>
             <div className="text-center mt-2">
-                <p className="text-gray-700 text-sm">In case of any problem, contact us at:</p>
-                <button
-                  className="text-orange-600 hover:underline text-sm"
-                  onClick={() => window.location.href = "tel:0512272649"}
-                >
-                  (051) 2272649
-                </button>
+                <p className="text-gray-700 text-sm" onClick={() => window.location.href = "tel:0512272649"}>In case of any problem, contact us at: <span className="text-orange-600 hover:underline text-sm"> (051) 2272649</span></p>
+                
               </div>
           </div>
         </div>
