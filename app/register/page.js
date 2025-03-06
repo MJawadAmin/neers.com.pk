@@ -1,9 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from 'next/link';
 import { Eye, EyeOff } from "lucide-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -37,7 +39,7 @@ const Register = () => {
   };
 
   const handleFocus = (e) => {
-    setTimeout(() => e.target.removeAttribute("readOnly"), 50);
+    setTimeout(() => e.target.removeAttribute("readOnly"), 1);
   };
 
   const togglePassword = () => setShowPassword(!showPassword);
@@ -48,25 +50,25 @@ const Register = () => {
       <h3 className="text-center text-[#F76300] font-[531.5] text-lg lg:text-[33.5px] leading-[27px] font-poppins mb-4">
         Sign Up
       </h3>
-      <div className="flex flex-col md:flex-row h-auto md:h-screen w-full max-w-[91.5vw]  shadow-[0_4px_6px_rgba(170,170,170,0.1)] rounded-lg overflow-hidden">
-        <div className="w-full md:w-[50%] flex items-center justify-center bg-white p-6">
-          <div className="w-full max-w-md">
+      <div className="flex flex-col md:flex-row h-auto md:h-screen w-full max-w-[91.5vw]  shadow-[0px_0px_2px_2px_rgba(0,0,0,0.06)] rounded-[10px] overflow-hidden">
+        <div className="w-full md:w-[50.3%] flex items-center justify-center bg-white p-6 mt-2 ">
+          <div className="w-[80%] max-w-[500px] ml-[66px] ">
             <input type="text" name="fake-user" autoComplete="off" style={{ display: "none" }} />
             <input type="password" name="fake-pass" autoComplete="off" style={{ display: "none" }} />
 
-            <form autoComplete="off">
+            <form autoComplete="off" className="">
               {[{ label: "User Name", name: "username_random_123", type: "text", placeholder: "Type User Name" },
-                { label: "Email Address", name: "useremail_hidden_abc", type: "email", placeholder: "Example@gmail.com" }]
+              { label: "Email Address", name: "useremail_hidden_abc", type: "email", placeholder: "Example@gmail.com" }]
                 .map(({ label, name, type, placeholder }) => (
-                  <div key={name} className="mb-4">
-                    <label className="block">
-                      <span className="text-red-500">*</span> {label}
+                  <div key={name} className="mb-6">
+                    <label className="block text-xs lg:text-[16px]">
+                      <span className="text-red-500">*</span>{label}
                     </label>
                     <input
                       type={type}
                       name={name}
                       id={`input-${name}`}
-                      className="px-2 py-1.5 w-full focus:outline-none border border-gray-300 focus:border-red-400 rounded text-black placeholder:font-sans !placeholder:text-greyish-400"
+                      className="px-2.5 py-1 w-[470px] h-[37px] focus:outline-none border border-gray-300 focus:border-red-400 rounded text-black placeholder:font-sans !placeholder:text-[#a5a7bf] placeholder:text-left placeholder:pl-0"
                       placeholder={placeholder}
                       value={formData[name]}
                       onChange={handleChange}
@@ -74,39 +76,42 @@ const Register = () => {
                       readOnly
                       onFocus={handleFocus}
                     />
+
+
                     {errors[name] && <p className="text-red-500 text-sm">{errors[name]}</p>}
                   </div>
-              ))}
+                ))}
+
 
               <div className="mb-4">
                 <label className="block">
-                  <span className="text-red-500">*</span> Phone Number
+                  <span className="text-red-500">*</span>Phone Number
                 </label>
                 <PhoneInput
                   country="pk"
                   value={formData.userphone_number_987}
                   onChange={handlePhoneChange}
                   containerClass="w-full"
-                  inputClass="!w-full !pl-14 !px-4 !py-2 !border !border-gray-300 !rounded !focus:outline-none !focus:ring-2 !focus:ring-orange-500"
+                  inputClass="!w-[470px]  !h-[37px]  !pl-16 !px-8 !py-4 !border !border-gray-300 !rounded !focus:outline-none !focus:ring-2 !focus:ring-orange-500"
                   autoComplete="new-password"
                 />
                 {errors.userphone_number_987 && <p className="text-red-500 text-sm">{errors.userphone_number_987}</p>}
               </div>
 
               {[{ name: "userpassword_secret", label: "Password", state: showPassword, toggle: togglePassword },
-                { name: "userconfirmPassword_hidden", label: "Confirm Password", state: showConfirmPassword, toggle: toggleConfirmPassword }]
+              { name: "userconfirmPassword_hidden", label: "Confirm Password", state: showConfirmPassword, toggle: toggleConfirmPassword }]
                 .map(({ name, label, state, toggle }) => (
                   <div key={name} className="mb-4 relative">
                     <label className="block">
-                      <span className="text-red-500">*</span> {label}
+                      <span className="text-red-500">*</span>{label}
                     </label>
                     <div className="relative">
-                      <input type="text" name="fake-password" autoComplete="off" style={{ display: "none" }} />
+                      <input type="text" name="fake-password" autoComplete="off" style={{ display: "none" }} className="w-[470px]  h-[25px] " />
                       <input
                         type={state ? "text" : "password"}
                         name={name}
                         id={`input-${name}`}
-                        className="px-2 py-1 w-full focus:outline-none border border-gray-300 rounded text-black placeholder:font-sans !placeholder:text-greyish-400"
+                        className="px-3 py-1 w-[470px]  h-[37px] focus:outline-none border border-gray-300 rounded text-black placeholder:font-sans !placeholder:text-greyish-400"
                         placeholder="Please use characters & symbols"
                         value={formData[name]}
                         onChange={handleChange}
@@ -114,22 +119,29 @@ const Register = () => {
                         readOnly
                         onFocus={handleFocus}
                       />
-                      <button type="button" className="absolute right-3 top-3 text-gray-500 hover:text-gray-700" onClick={toggle}>
-                        {state ? <EyeOff size={20} /> : <Eye size={20} />}
+                      <button type="button" className="absolute right-10 top-3 text-gray-500 hover:text-gray-700" onClick={toggle}>
+                        {state ? <Eye size={20} /> : <EyeOff size={20} />}
                       </button>
                     </div>
                     {errors[name] && <p className="text-red-500 text-sm">{errors[name]}</p>}
                   </div>
-              ))}
+                ))}
 
-              <button type="submit" className="w-full bg-orange-600 text-white py-2 cursor-pointer transition">
+              <button type="submit" className=" w-[470px] mt-3.5  h-[37px] bg-[#f76300] font-semibold text-lg text-white rounded-sm py-1.5 cursor-pointer transition">
                 Next
               </button>
+              <Link href="/signin">
+                <span className="text-orange-500 hover:underline flex justify-end mr-6 font-medium text-[11px]">Already a member?</span>
+              </Link>
+              <br />
+              <div className="shadow-[4px_4px_6px_-2px_rgba(0,0,0,0.4)] py-1 bg-[#fafafa]"><p className="text-center mt-2 text-sm">In case of any problem contact us on <span className="text-orange-500"  onClick={() => window.location.href = "tel:0512272649"}>.(051) 2272649</span></p>
+              </div>
+
             </form>
           </div>
         </div>
-        <div className="w-full md:w-1/2 h-64 md:h-auto relative">
-          <Image src="/login.webp" alt="background" className="w-full h-full object-cover" width={500} height={500} />
+        <div className="w-full md:w-[53%] ml-9 h-64 md:h-auto relative">
+          <Image src="/login.webp" alt="background" className="hidden md:block w-[47vw]  h-[94vh]  " width={450} height={500} />
         </div>
       </div>
     </div>

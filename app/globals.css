@@ -36,3 +36,6 @@ body {
 ::-webkit-scrollbar-track {
   background-color: #f1f1f1;
 }
+.clip-path-trapezoid {
+  clip-path: polygon(0% 0%, 100% 0%, 95% 100%, 5% 100%);
+}

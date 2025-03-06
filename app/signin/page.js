@@ -133,10 +133,10 @@ const Login = () => {
               </button>
               
             </div>
-            <div className="text-center mt-2">
-                <p className="text-gray-700 text-sm" onClick={() => window.location.href = "tel:0512272649"}>In case of any problem, contact us at: <span className="text-orange-600 hover:underline text-sm"> (051) 2272649</span></p>
-                
+              
+                <div className="shadow-[4px_4px_6px_-2px_rgba(0,0,0,0.4)] py-1 bg-[#fafafa]"><p className="text-center mt-2 text-sm">In case of any problem contact us on <span className="text-orange-500" onClick={() => window.location.href = "tel:0512272649"}>.(051) 2272649</span></p>
               </div>
+             
           </div>
         </div>
 
