@@ -6,7 +6,6 @@ import { Eye, EyeOff } from "lucide-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-
 const Register = () => {
   const [formData, setFormData] = useState({
     username_random_123: "",
@@ -131,10 +130,10 @@ const Register = () => {
                 Next
               </button>
               <Link href="/signin">
-                <span className="text-orange-500 hover:underline flex justify-end mr-6 font-medium text-[11px]">Already a member?</span>
+                <span className="text-orange-500 hover:underline flex justify-end mr-6 font-[450px] text-[12.5px] mt-0.5">Already a member?</span>
               </Link>
               <br />
-              <div className="shadow-[4px_4px_6px_-2px_rgba(0,0,0,0.4)] py-1 bg-[#fafafa]"><p className="text-center mt-2 text-sm">In case of any problem contact us on <span className="text-orange-500"  onClick={() => window.location.href = "tel:0512272649"}>.(051) 2272649</span></p>
+              <div className="shadow-[4px_4px_6px_-2px_rgba(0,0,0,0.4)] py-1.5 w-[470px] bg-[#fafafa]"><p className="text-center  text-sm">In case of any problem contact us on <span className="text-orange-500"  onClick={() => window.location.href = "tel:0512272649"}>.(051) 2272649</span></p>
               </div>
 
             </form>
