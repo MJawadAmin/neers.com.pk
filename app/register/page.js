@@ -49,8 +49,8 @@ const Register = () => {
       <h3 className="text-center text-[#F76300] font-[531.5] text-lg lg:text-[33.5px] leading-[27px] font-poppins mb-4">
         Sign Up
       </h3>
-      <div className="flex flex-col md:flex-row h-auto md:h-screen w-full max-w-[91.5vw]  shadow-[0px_0px_2px_2px_rgba(0,0,0,0.06)] rounded-[10px] overflow-hidden">
-        <div className="w-full md:w-[50.3%] flex items-center justify-center bg-white p-6 mt-2 ">
+      <div className="flex flex-col md:flex-row h-auto md:h-screen w-full max-w-[91.5vw]  rounded-[10px] overflow-hidden">
+        <div className="w-full md:w-[50.3%] flex items-center justify-center bg-white p-6 mt-6 ">
           <div className="w-[80%] max-w-[500px] ml-[66px] ">
             <input type="text" name="fake-user" autoComplete="off" style={{ display: "none" }} />
             <input type="password" name="fake-pass" autoComplete="off" style={{ display: "none" }} />
@@ -59,7 +59,7 @@ const Register = () => {
               {[{ label: "User Name", name: "username_random_123", type: "text", placeholder: "Type User Name" },
               { label: "Email Address", name: "useremail_hidden_abc", type: "email", placeholder: "Example@gmail.com" }]
                 .map(({ label, name, type, placeholder }) => (
-                  <div key={name} className="mb-6">
+                  <div key={name} className="mb-5">
                     <label className="block text-xs lg:text-[16px]">
                       <span className="text-red-500">*</span>{label}
                     </label>
@@ -127,7 +127,10 @@ const Register = () => {
                 ))}
 
               <button type="submit" className=" w-[470px] mt-3.5  h-[37px] bg-[#f76300] font-semibold text-lg text-white rounded-sm py-1.5 cursor-pointer transition">
+               
+                <Link href="/verify-otp">
                 Next
+              </Link>
               </button>
               <Link href="/signin">
                 <span className="text-orange-500 hover:underline flex justify-end mr-6 font-[450px] text-[12.5px] mt-0.5">Already a member?</span>
