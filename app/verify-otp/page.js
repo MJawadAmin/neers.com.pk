@@ -35,7 +35,7 @@ const VerifyOtp = () => {
   const verifyOTP = () => {
     if (emailOtp.join("") === STATIC_OTP && whatsappOtp.join("") === STATIC_OTP) {
       toast.success("OTP Verified!");
-      router.push("/");
+      router.push("/signin");
     } else {
       toast.error("Invalid OTP");
     }
