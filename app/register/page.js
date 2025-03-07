@@ -45,11 +45,11 @@ const Register = () => {
   const toggleConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen w-full pt-[18.5px]">
+    <div className="flex flex-col items-center justify-center  h-screen w-full pt-[18.5px]">
       <h3 className="text-center text-[#F76300] font-[531.5] text-lg lg:text-[33.5px] leading-[27px] font-poppins mb-4">
         Sign Up
       </h3>
-      <div className="flex flex-col md:flex-row h-auto md:h-screen w-full max-w-[91.5vw]  rounded-[10px] overflow-hidden">
+      <div className="flex flex-col md:flex-row h-auto md:h-screen shadow-[0px_0px_6px_-2px_rgba(0,0,0,0.3)] w-full max-w-[91.5vw]  rounded-[10px] overflow-hidden">
         <div className="w-full md:w-[50.3%] flex items-center justify-center bg-white p-6 mt-6 ">
           <div className="w-[80%] max-w-[500px] ml-[66px] ">
             <input type="text" name="fake-user" autoComplete="off" style={{ display: "none" }} />
