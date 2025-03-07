@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Use next/navigation instead of next/router
 import { Eye, EyeOff } from "lucide-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -14,24 +15,23 @@ const client = new ApolloClient({
 });
 
 // Define the GraphQL mutation for user registration
-const REGISTER_MUTATION = gql`
-  mutation RegisterUser($input: RegisterInput!) {
-    register(input: $input) {
-      id
-      username
-      email
-      phone
+const CLIENT_SIGNUP_MUTATION = gql`
+  mutation ClientSignup($name: String!, $phone: String!, $email: String!, $password: String!) {
+    clientSignup(name: $name, phone: $phone, email: $email, password: $password) {
+      message
+      success
     }
   }
 `;
 
 const Register = () => {
+  const router = useRouter(); // Initialize useRouter
   const [formData, setFormData] = useState({
-    username_random_123: "",
-    useremail_hidden_abc: "",
-    userpassword_secret: "",
-    userconfirmPassword_hidden: "",
-    userphone_number_987: "",
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -39,7 +39,7 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Apollo Client mutation hook
-  const [registerUser, { loading, error }] = useMutation(REGISTER_MUTATION, { client });
+  const [clientSignup, { loading, error }] = useMutation(CLIENT_SIGNUP_MUTATION, { client });
 
   useEffect(() => {
     document.querySelectorAll("input").forEach((input) => {
@@ -56,7 +56,7 @@ const Register = () => {
   };
 
   const handlePhoneChange = (value) => {
-    setFormData({ ...formData, userphone_number_987: value });
+    setFormData({ ...formData, phone: value });
   };
 
   const handleFocus = (e) => {
@@ -71,14 +71,14 @@ const Register = () => {
 
     // Validate form data
     const newErrors = {};
-    if (!formData.username_random_123) newErrors.username_random_123 = "Username is required";
-    if (!formData.useremail_hidden_abc) newErrors.useremail_hidden_abc = "Email is required";
-    if (!formData.userpassword_secret) newErrors.userpassword_secret = "Password is required";
-    if (!formData.userconfirmPassword_hidden) newErrors.userconfirmPassword_hidden = "Confirm Password is required";
-    if (formData.userpassword_secret !== formData.userconfirmPassword_hidden) {
-      newErrors.userconfirmPassword_hidden = "Passwords do not match";
+    if (!formData.name) newErrors.name = "Name is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
+    if (!formData.confirmPassword) newErrors.confirmPassword = "Confirm Password is required";
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
     }
-    if (!formData.userphone_number_987) newErrors.userphone_number_987 = "Phone number is required";
+    if (!formData.phone) newErrors.phone = "Phone number is required";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -87,22 +87,33 @@ const Register = () => {
 
     try {
       // Call the GraphQL mutation
-      const { data } = await registerUser({
+      const { data } = await clientSignup({
         variables: {
-          input: {
-            username: formData.username_random_123,
-            email: formData.useremail_hidden_abc,
-            password: formData.userpassword_secret,
-            phone: formData.userphone_number_987,
-          },
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          password: formData.password,
         },
       });
 
-      console.log("Registration successful:", data.register);
-      // Redirect to OTP verification page
-      window.location.href = "/verify-otp";
+      console.log("Registration successful:", data.clientSignup);
+
+      // Show success alert
+      if (data.clientSignup.success) {
+        alert("Registration successful! Please check your email for the OTP.");
+        // Redirect to OTP verification page
+        router.push("/verify-otp");
+      } else {
+        alert(`Registration failed: ${data.clientSignup.message}`);
+      }
     } catch (err) {
       console.error("Registration failed:", err);
+
+      // Log the full error response
+      if (err.networkError && err.networkError.result) {
+        console.error("API Error Response:", err.networkError.result.errors);
+      }
+
       setErrors({ submit: err.message });
     }
   };
@@ -120,8 +131,8 @@ const Register = () => {
 
             <form autoComplete="off" onSubmit={handleSubmit}>
               {[
-                { label: "User Name", name: "username_random_123", type: "text", placeholder: "Type User Name" },
-                { label: "Email Address", name: "useremail_hidden_abc", type: "email", placeholder: "Example@gmail.com" },
+                { label: "Name", name: "name", type: "text", placeholder: "Type Your Name" },
+                { label: "Email Address", name: "email", type: "email", placeholder: "Example@gmail.com" },
               ].map(({ label, name, type, placeholder }) => (
                 <div key={name} className="mb-5">
                   <label className="block text-xs lg:text-[16px]">
@@ -149,18 +160,18 @@ const Register = () => {
                 </label>
                 <PhoneInput
                   country="pk"
-                  value={formData.userphone_number_987}
+                  value={formData.phone}
                   onChange={handlePhoneChange}
                   containerClass="w-full"
                   inputClass="!w-[470px] !h-[37px] !pl-16 !px-8 !py-4 !border !border-gray-300 !rounded !focus:outline-none !focus:ring-2 !focus:ring-orange-500"
                   autoComplete="new-password"
                 />
-                {errors.userphone_number_987 && <p className="text-red-500 text-sm">{errors.userphone_number_987}</p>}
+                {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
               </div>
 
               {[
-                { name: "userpassword_secret", label: "Password", state: showPassword, toggle: togglePassword },
-                { name: "userconfirmPassword_hidden", label: "Confirm Password", state: showConfirmPassword, toggle: toggleConfirmPassword },
+                { name: "password", label: "Password", state: showPassword, toggle: togglePassword },
+                { name: "confirmPassword", label: "Confirm Password", state: showConfirmPassword, toggle: toggleConfirmPassword },
               ].map(({ name, label, state, toggle }) => (
                 <div key={name} className="mb-4 relative">
                   <label className="block">
