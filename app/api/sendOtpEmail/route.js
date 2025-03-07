@@ -3,38 +3,34 @@ import nodemailer from "nodemailer";
 
 export async function POST(req) {
   try {
-    const { email, otp } = await req.json();
-
-    if (!email || !otp) {
-      console.error("Missing email or OTP");
-      return NextResponse.json({ error: "Email and OTP are required" }, { status: 400 });
+    const { email } = await req.json();
+    if (!email) {
+      return NextResponse.json({ message: "Email is required" }, { status: 400 });
     }
 
-    console.log("Received email:", email);
-    console.log("Received OTP:", otp);
+    const otp = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit OTP
 
+    // Configure nodemailer transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
+        user: process.env.EMAIL_USER, // Ensure this is set in your .env file
+        pass: process.env.EMAIL_PASS,
       },
     });
 
     const mailOptions = {
-      from: `"Your App" <${process.env.EMAIL_USER}>`,
+      from: process.env.EMAIL_USER,
       to: email,
       subject: "Your OTP Code",
       text: `Your OTP code is: ${otp}`,
-      html: `<p>Your OTP code is: <strong>${otp}</strong></p>`,
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent successfully:", info.response);
+    await transporter.sendMail(mailOptions);
 
-    return NextResponse.json({ message: "OTP sent successfully!" });
+    return NextResponse.json({ message: "OTP sent successfully", otp }, { status: 200 });
   } catch (error) {
-    console.error("Full Error Details:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Error sending OTP:", error); // Log the error
+    return NextResponse.json({ message: "Failed to send OTP", error: error.message }, { status: 500 });
   }
 }

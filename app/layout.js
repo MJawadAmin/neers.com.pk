@@ -6,6 +6,7 @@ import About from "./about/page";
 import Tips from "./tips/page";
 import Faqs from "./components/Faqs";
 
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"], // Add the font weights you need
