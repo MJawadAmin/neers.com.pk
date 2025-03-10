@@ -4,53 +4,54 @@ import { useState } from "react";
 const steps = ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5", "Step 6"];
 
 export default function Stepper({ currentStep }) {
-  console.log("Stepper Rendered, Current Step:", currentStep);  //Debugging log
+  console.log("Stepper Rendered, Current Step:", currentStep); // Debugging log
 
   return (
-    <div className="flex justify-center  mb-6 bg-[#173b45] w-[90%] h-[200px] p-4 rounded">
-      {steps.map((step, index) => {
-        console.log(`Rendering step ${index + 1}, currentStep: ${currentStep}`); // Debugging log
-        return (
-          <div key={index} className="flex items-center justify-between">
-            {/* Step Circle */}
-            <div
-              className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold transition-all duration-300
-              ${currentStep >= index ? "bg-orange-600" : "bg-gray-400"}`}
-            >
-              {index + 1}
-            </div>
-
-            {/* Connector Line */}
-            {index !== steps.length - 1 && (
+    <div className="flex justify-center mb-6 bg-[#173b45] w-[90%] h-[200px] p-4 rounded-lg">
+      <div className="flex justify-between w-full items-center"> {/* Parent container with justify-between */}
+        {steps.map((step, index) => {
+          console.log(`Rendering step ${index + 1}, currentStep: ${currentStep}`); // Debugging log
+          return (
+            <div key={index} className="flex items-center">
+              {/* Step Circle */}
               <div
-                className={`w-16 h-1 transition-all duration-300 
-                ${currentStep > index ? "bg-orange-600" : "bg-gray-400"}`}
-              ></div>
-            )}
-          </div>
-        );
-      })}
+                className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold transition-all duration-300
+                ${currentStep >= index ? "bg-orange-600" : "bg-gray-400"}`}
+              >
+                {index + 1}
+              </div>
+
+              {/* Connector Line */}
+              {index !== steps.length - 1 && (
+                <div
+                  className={`w-52 h-[2px] ml-5 transition-all duration-300 
+                  ${currentStep > index ? "bg-orange-600" : "bg-gray-400"}`}
+                ></div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-// ✅ Fully Functional Parent Component
 export function StepperContainer() {
   const [currentStep, setCurrentStep] = useState(0);
-  
-  console.log("Total Steps:", steps.length); // ✅ Debugging log
-  console.log("Current Step (Rendered):", currentStep); // ✅ Debugging log
+
+  console.log("Total Steps:", steps.length); // Debugging log
+  console.log("Current Step (Rendered):", currentStep); // Debugging log
 
   const nextStep = () => {
     setCurrentStep((prevStep) => {
-      console.log("Next clicked, currentStep:", prevStep); // ✅ Debugging log
+      console.log("Next clicked, currentStep:", prevStep); // Debugging log
       return prevStep < steps.length - 1 ? prevStep + 1 : prevStep;
     });
   };
 
   const prevStep = () => {
     setCurrentStep((prevStep) => {
-      console.log("Previous clicked, currentStep:", prevStep); // ✅ Debugging log
+      console.log("Previous clicked, currentStep:", prevStep); // Debugging log
       return prevStep > 0 ? prevStep - 1 : prevStep;
     });
   };
