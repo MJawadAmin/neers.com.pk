@@ -7,29 +7,29 @@ export default function Stepper({ currentStep }) {
   console.log("Stepper Rendered, Current Step:", currentStep);  //Debugging log
 
   return (
-    <div className="flex justify-center items-center mb-6">
-     {steps.map((step, index) => {
-  console.log(`Rendering step ${index + 1}, currentStep: ${currentStep}`); // Debugging log
-  return (
-    <div key={index} className="flex items-center">
-      {/* Step Circle */}
-      <div
-        className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold transition-all duration-300
-        ${currentStep >= index ? "bg-orange-600" : "bg-gray-400"}`}
-      >
-        {index + 1}
-      </div>
+    <div className="flex justify-center  mb-6 bg-[#173b45] w-[90%] h-[200px] p-4 rounded">
+      {steps.map((step, index) => {
+        console.log(`Rendering step ${index + 1}, currentStep: ${currentStep}`); // Debugging log
+        return (
+          <div key={index} className="flex items-center justify-between">
+            {/* Step Circle */}
+            <div
+              className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold transition-all duration-300
+              ${currentStep >= index ? "bg-orange-600" : "bg-gray-400"}`}
+            >
+              {index + 1}
+            </div>
 
-      {/* Connector Line */}
-      {index !== steps.length - 1 && (
-        <div
-          className={`w-16 h-1 transition-all duration-300 
-          ${currentStep > index ? "bg-orange-600" : "bg-gray-400"}`}
-        ></div>
-      )}
-    </div>
-  );
-})}
+            {/* Connector Line */}
+            {index !== steps.length - 1 && (
+              <div
+                className={`w-16 h-1 transition-all duration-300 
+                ${currentStep > index ? "bg-orange-600" : "bg-gray-400"}`}
+              ></div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
