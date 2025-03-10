@@ -39,3 +39,10 @@ body {
 .clip-path-trapezoid {
   clip-path: polygon(0% 0%, 100% 0%, 95% 100%, 5% 100%);
 }
+.trapezoid {
+  border-bottom: 40px solid #333;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  height: 0;
+  width: 40px;
+}
