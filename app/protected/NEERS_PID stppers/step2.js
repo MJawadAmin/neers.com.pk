@@ -1,6 +1,6 @@
 export default function Step2({ next, prev }) {
     return (
-      <div className="p-4 text-center">
+      <div className="p-4 text-center w-full border-2">
         <h2 className="text-2xl font-semibold mb-4">Step 2</h2>
         <p>Confirm your information</p>
         <div className="flex gap-4 mt-4">
