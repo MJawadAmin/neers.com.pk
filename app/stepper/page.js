@@ -20,9 +20,9 @@ export default function StepperPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-5 w-full">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#f76300] p-5 w-full">
       <Stepper currentStep={step} />
-      <div className="w-full bg-whiteshadow-lg rounded-lg p-5 ">
+      <div className="max-w-[90%] w-full bg-whiteshadow-lg rounded-lg px-5 pt-2 ">
         {step === 0 && <Step1 next={nextStep} />}
         {step === 1 && <Step2 next={nextStep} prev={prevStep} />}
         {step === 2 && <Step3 next={nextStep} prev={prevStep} />}

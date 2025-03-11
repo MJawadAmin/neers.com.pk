@@ -8,13 +8,13 @@ import Product3 from './prduct3'
 
 const page = () => {
   return (
-    <div>   <div className='flex justify-between px-[170px] mt-8'>
+    <div>   <div className='flex justify-between px-[160px] mt-7'>
    <button className="flex items-center gap-2">
   <Image src="/defaultProfile.webp" height={45} width={45} alt="Profile" />
   <span className='text-[18px]'>Hello jawadamin</span>
 </button>
 
-    <div><button className='bg-[#F76300] px-5 py-2 rounded-sm text-white text-[12px]'>Log out </button></div>
+    <div><button className='bg-[#F76300] px-5 py-2 rounded-sm text-white text-[13px]'>Log Out </button></div>
 </div>
     <div className='w-[81.3%] mx-auto px-11 py-6 shadow-lg shadow-gray-500 mt-2  '>
 

@@ -1,31 +1,39 @@
 "use client";
 import { useState } from "react";
 
-const steps = ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5", "Step 6"];
+const steps = ["Agreement", "Applicant Info", "Model Info", "Document", "Documents", "Test Repots"];
 
 export default function Stepper({ currentStep }) {
   console.log("Stepper Rendered, Current Step:", currentStep); // Debugging log
 
   return (
-    <div className="flex justify-center mb-6 bg-[#173b45] w-[90%] h-[200px] p-4 rounded-lg">
-      <div className="flex justify-between w-full items-center"> {/* Parent container with justify-between */}
+    <div className="flex justify-center bg-[#173b45] max-w-[87.5%] w-full h-[120px] px-4 rounded-lg">
+      <div className="flex justify-between w-full items-center px-4 sm:px-10 lg:px-20">
         {steps.map((step, index) => {
           console.log(`Rendering step ${index + 1}, currentStep: ${currentStep}`); // Debugging log
           return (
-            <div key={index} className="flex items-center">
-              {/* Step Circle */}
-              <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold transition-all duration-300
-                ${currentStep >= index ? "bg-orange-600" : "bg-gray-400"}`}
-              >
-                {index + 1}
+            <div key={index} className="flex items-center justify-center flex-1">
+              {/* Step Circle and Name */}
+              <div className="flex flex-col items-center">
+                {/* Step Circle */}
+                <div
+                  className={`w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full text-white font-normal transition-all duration-300
+                  ${currentStep >= index ? "bg-orange-600" : "bg-gray-400"}`}
+                >
+                  {index + 1}
+                </div>
+
+                {/* Step Name */}
+                <div className="mt-2 sm:mt-3 text-nowrap text-white text-xs sm:text-sm text-center">
+                  {step}
+                </div>
               </div>
 
               {/* Connector Line */}
               {index !== steps.length - 1 && (
                 <div
-                  className={`w-52 h-[2px] ml-5 transition-all duration-300 
-                  ${currentStep > index ? "bg-orange-600" : "bg-gray-400"}`}
+                  className={`flex-1 h-[2px] mx-2 sm:mx-4 transition-all duration-300 
+                  ${currentStep > index ? "bg-orange-600" : "bg-white"}`}
                 ></div>
               )}
             </div>
@@ -56,6 +64,19 @@ export function StepperContainer() {
     });
   };
 
+  const handleSave = () => {
+    console.log("Save clicked, currentStep:", currentStep); // Debugging log
+
+    // Add your save logic here
+    saveInformation(currentStep); // Example function to save information
+  };
+
+  const saveInformation = (step) => {
+    // Example: Save information for the current step
+    console.log(`Saving information for step ${step + 1}: ${steps[step]}`);
+    // You can add API calls or state updates here to save the data
+  };
+
   return (
     <div className="flex flex-col items-center">
       <Stepper currentStep={currentStep} />
@@ -73,6 +94,12 @@ export function StepperContainer() {
           disabled={currentStep === steps.length - 1}
         >
           Next
+        </button>
+        <button
+          onClick={handleSave}
+          className="px-4 py-2 bg-green-600 text-white rounded disabled:opacity-50"
+        >
+          Save
         </button>
       </div>
     </div>

@@ -46,3 +46,20 @@ body {
   height: 0;
   width: 40px;
 }
+/* Custom radio button styling for the first set */
+/* Shared styles for all custom radio buttons */
+input[type="radio"].custom-radio {
+  appearance: none; /* Remove default styling */
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db; /* Gray border (same as default) */
+  border-radius: 50%; /* Make it round */
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="radio"].custom-radio:checked {
+  background-color: #f97316; /* Orange background when checked */
+  border-color: #f97316; /* Orange border when checked */
+  box-shadow: inset 0 0 0 2px white; /* Inner white circle */
+}

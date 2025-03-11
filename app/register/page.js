@@ -162,8 +162,8 @@ const Register = () => {
                   country="pk"
                   value={formData.phone}
                   onChange={handlePhoneChange}
-                  containerClass="w-full"
-                  inputClass="!w-[470px] !h-[37px] !pl-16 !px-8 !py-4 !border !border-gray-300 !rounded !focus:outline-none !focus:ring-2 !focus:ring-orange-500"
+                  container lass="w-full"
+                  input className="!w-[470px] !h-[37px] !pl-16 !px-8 !py-4 !border !border-gray-300 !rounded !focus:outline-none !focus:ring-2 !focus:ring-orange-500"
                   autoComplete="new-password"
                 />
                 {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
