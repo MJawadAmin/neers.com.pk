@@ -8,8 +8,9 @@ export default function Step2({ next, prev, save }) {
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
   const [companyName, setCompanyName] = useState("");
-  const [companyAddress, setCompanyAddress] = useState("Par hoti");
   const [errors, setErrors] = useState({});
+  const [companyAddress, setCompanyAddress] = useState("Par hoti");
+ 
  const [phone, setPhone] = useState("");
  const [isRegistered, setIsRegistered]=useState(false)
  const [isRegistered1, setIsRegistered1]=useState(false)

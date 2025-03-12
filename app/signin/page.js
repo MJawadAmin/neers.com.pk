@@ -89,7 +89,7 @@ const Login = () => {
         localStorage.setItem("token", data.clientLogin.token);
 
         // Redirect to the dashboard
-        router.push("/dashboard");
+        router.push("/protected/productsList");
       } else {
         // Display error message from the API
         alert(`Login failed: ${data.clientLogin.message}`);

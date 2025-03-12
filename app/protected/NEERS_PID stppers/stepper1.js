@@ -7,12 +7,12 @@ export default function Stepper({ currentStep }) {
   console.log("Stepper Rendered, Current Step:", currentStep); // Debugging log
 
   return (
-    <div className="flex justify-center bg-[#173b45] max-w-[87.5%] w-full h-[120px] px-4 rounded-lg">
-      <div className="flex justify-between w-full items-center px-4 sm:px-10 lg:px-20">
+    <div className="flex justify-center bg-[#173b45] max-w-[88%] w-full h-[120px] px-4 rounded-lg">
+      <div className="flex w-full items-center px-4 sm:px-10 lg:px-20">
         {steps.map((step, index) => {
           console.log(`Rendering step ${index + 1}, currentStep: ${currentStep}`); // Debugging log
           return (
-            <div key={index} className="flex items-center justify-center flex-1">
+            <div key={index} className="flex items-center flex-1">
               {/* Step Circle and Name */}
               <div className="flex flex-col items-center">
                 {/* Step Circle */}

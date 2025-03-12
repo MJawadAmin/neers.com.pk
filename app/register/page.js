@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Use next/navigation instead of next/router
+import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -25,7 +25,7 @@ const CLIENT_SIGNUP_MUTATION = gql`
 `;
 
 const Register = () => {
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -162,8 +162,8 @@ const Register = () => {
                   country="pk"
                   value={formData.phone}
                   onChange={handlePhoneChange}
-                  container lass="w-full"
-                  input className="!w-[470px] !h-[37px] !pl-16 !px-8 !py-4 !border !border-gray-300 !rounded !focus:outline-none !focus:ring-2 !focus:ring-orange-500"
+                  containerClass="w-full"
+                  inputClass="!w-[470px] !h-[37px] !pl-16 !px-8 !py-4 !border !border-gray-300 !rounded !focus:outline-none !focus:ring-2 !focus:ring-orange-500"
                   autoComplete="new-password"
                 />
                 {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
