@@ -1,12 +1,19 @@
+import { useState } from "react";
+import Firstdiv from "./step6/Firstdiv";
+import Seconddiv from "./step6/Seconddiv"
 export default function Step6({ prev }) {
-    return (
-      <div className="p-4 text-center">
-        <h2 className="text-2xl font-semibold mb-4">Step 6</h2>
-        <p>Registration complete!</p>
-        <button onClick={prev} className="mt-4 bg-gray-500 text-white px-4 py-2 rounded">
-        Previous
-        </button>
-      </div>
-    );
-  }
   
+
+  return (
+    <div className="w-full  bg-white p-10 space-y-6">
+    {/*Main div 1 */}
+    <Firstdiv/>
+    <Seconddiv/>
+   
+
+      <button onClick={prev} className="mt-4 bg-gray-500 text-white px-4 py-2 rounded">
+        Previous
+      </button>
+    </div>
+  );
+}
