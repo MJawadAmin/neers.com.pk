@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import About from "./about/page";
 import Tips from "./tips/page";
 import Faqs from "./components/Faqs";
+import Providers from "./src/components/Provider"; // Import the Providers component
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -22,24 +23,24 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <title>Neers Vendoor</title>
       <body className={`${poppins.variable} antialiased flex flex-col min-h-screen`}>
-        
-        {/* ✅ Navbar is Sticky & Always Visible, but has its Own Space */}
-        {/* <div className="sticky top-0 left-0 w-full z-50 bg-white  shadow-[0_4px_6px_rgba(170,170,170,0.1)]
-">
-          <Navbar />
-        </div> */}
+        {/* Wrap the entire content with Providers */}
+        <Providers>
+          {/* ✅ Navbar is Sticky & Always Visible, but has its Own Space */}
+          <div className="sticky top-0 left-0 w-full z-50 bg-white shadow-[0_4px_6px_rgba(170,170,170,0.1)]">
+            <Navbar />
+          </div>
 
-        {/* ✅ Content Starts Below the Navbar */}
-        <main className="flex-1">
-          {children}
-          <About />
-          <Tips/>
-          <Faqs/>
-        </main>
+          {/* ✅ Content Starts Below the Navbar */}
+          <main className="flex-1">
+            {children} {/* Render children only once */}
+            <About />
+            <Tips />
+            <Faqs />
+          </main>
 
-        {/* ✅ Footer Always at the Bottom */}
-        <Footer />
-        
+          {/* ✅ Footer Always at the Bottom */}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

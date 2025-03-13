@@ -1,5 +1,10 @@
-import React, { useState } from "react";
-import Select from "react-select"; // Ensure react-select is installed
+// app/protected/NEERS_PID/steps/step2/FirstComponent.jsx
+"use client"; // Mark this as a Client Component
+
+import React, { useState, useEffect } from "react";
+import Select from "react-select";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_STEPPER, UPDATE_STEPPER } from "../../../src/apollo/queries"; // Correct import path
 
 const FirstComponent = () => {
   // State variables
@@ -15,6 +20,65 @@ const FirstComponent = () => {
     city: "",
     companyAddress: "",
   });
+
+  // GraphQL Query to Fetch Data
+  const { data, loading, error } = useQuery(GET_STEPPER, {
+    variables: {
+      productId: "NEERS-PID-1", // Replace with actual product ID
+      stepperType: "product", // Replace with actual stepper type
+    },
+  });
+
+  // GraphQL Mutation to Update Data
+  const [updateStepper] = useMutation(UPDATE_STEPPER);
+
+  // Populate Form Fields with Fetched Data
+  useEffect(() => {
+    if (data && data.clientGetStepper && data.clientGetStepper.steps_info) {
+      const { company_name, company_address, company_country, company_province, company_city } =
+        data.clientGetStepper.steps_info.applicantInfo;
+
+      setCompanyName(company_name || "");
+      setCompanyAddress(company_address || "Par hoti");
+      setSelectedCountry(
+        countries.find((country) => country.value === company_country) || null
+      );
+      setSelectedState(
+        states.find((state) => state.value === company_province) || null
+      );
+      setSelectedCity(
+        cities.find((city) => city.value === company_city) || null
+      );
+    }
+  }, [data]);
+
+  // Handle Form Submission
+  const handleSubmit = async () => {
+    const stepsInfo = {
+      applicantInfo: {
+        company_name: companyName,
+        company_address: companyAddress,
+        company_country: selectedCountry?.value,
+        company_province: selectedState?.value,
+        company_city: selectedCity?.value,
+      },
+    };
+
+    try {
+      const result = await updateStepper({
+        variables: {
+          action: "update",
+          currentStep: "1",
+          stepperType: "product", // Replace with actual stepper type
+          stepsInfo: [stepsInfo],
+          productId: "NEERS-PID-1", // Replace with actual product ID
+        },
+      });
+      console.log("Update Successful:", result.data.clientUpdateStepper);
+    } catch (err) {
+      console.error("Update Failed:", err);
+    }
+  };
 
   // Dummy data for dropdowns (replace with actual data)
   const countries = [
@@ -36,7 +100,7 @@ const FirstComponent = () => {
   ];
 
   return (
-    <div>
+    <div className="w-full p-10 bg-white rounded-lg border-gray-300 border-1 shadow-md shadow-gray-400">
       <h2 className="text-xl mb-6">1. Applicant Information</h2>
       <h2 className="text-xl mb-6">Company Information</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 items-center">
@@ -188,7 +252,7 @@ const FirstComponent = () => {
           name="comments"
           id="companyComments"
           placeholder="company address..."
-          className="mt-2 w-full h-24 border border-zinc-300 rounded p-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+          className="mt-2 w-full h-24 border border-zinc-300 rounded p-2 text-black focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
           spellCheck="false"
           value={companyAddress}
           onChange={(e) => setCompanyAddress(e.target.value)}
@@ -196,6 +260,16 @@ const FirstComponent = () => {
         {errors.companyAddress && (
           <div className="text-sm text-red-500">{errors.companyAddress}</div>
         )}
+      </div>
+
+      {/* Submit Button */}
+      <div className="mt-5">
+        <button
+          onClick={handleSubmit}
+          className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
+        >
+          Save and Continue
+        </button>
       </div>
     </div>
   );

@@ -39,9 +39,11 @@
     "@graphql-codegen/typescript": "^4.1.5",
     "@graphql-codegen/typescript-operations": "^4.5.1",
     "@graphql-codegen/typescript-react-apollo": "^4.3.2",
+    "@parcel/watcher": "^2.5.1",
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.2.0",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4",
+    "typescript": "^5.8.2"
   }
 }

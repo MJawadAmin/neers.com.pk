@@ -85,7 +85,7 @@ const Login = () => {
       console.log("Login response:", data.clientLogin);
 
       if (data.clientLogin.success) {
-        // Save the token to localStorage or cookies (optional)
+        // Save the token to localStorage
         localStorage.setItem("token", data.clientLogin.token);
 
         // Redirect to the dashboard
@@ -105,6 +105,15 @@ const Login = () => {
       // Display a user-friendly error message
       setErrors({ submit: "Login failed. Please check your credentials and try again." });
     }
+  };
+
+  // Logout function
+  const handleLogout = () => {
+    // Clear the token from localStorage
+    localStorage.removeItem("token");
+
+    // Redirect to the login page
+    router.push("/login");
   };
 
   return (
@@ -218,6 +227,16 @@ const Login = () => {
           <Image src="/login.webp" alt="background" className="w-full h-full object-cover" width={500} height={500} />
         </div>
       </div>
+
+      {/* Logout Button (Conditionally Rendered) */}
+      {/* {localStorage.getItem("token") && (
+        <button
+          onClick={handleLogout}
+          className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+        >
+          Logout
+        </button>
+      )} */}
     </div>
   );
 };

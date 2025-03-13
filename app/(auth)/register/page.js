@@ -68,7 +68,6 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     // Validate form data
     const newErrors = {};
     if (!formData.name) newErrors.name = "Name is required";
