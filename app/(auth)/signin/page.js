@@ -1,10 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { BiCheckDouble } from "react-icons/bi";
 import { ApolloClient, InMemoryCache, gql, useMutation } from "@apollo/client";
+import AuthContext from "@/app/context/Authcontext";
 
 // Initialize Apollo Client
 const client = new ApolloClient({
@@ -38,7 +39,12 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   // Apollo Client mutation hook
-  const [clientLogin, { loading, error }] = useMutation(CLIENT_LOGIN_MUTATION, { client });
+  const [clientLogin, { loading, error }] = useMutation(CLIENT_LOGIN_MUTATION, {
+    client,
+  });
+
+  // Use AuthContext
+  const { login } = useContext(AuthContext);
 
   useEffect(() => {
     document.querySelectorAll("input").forEach((input) => {
@@ -47,7 +53,7 @@ const Login = () => {
       input.setAttribute("spellcheck", "false");
       input.setAttribute("autocapitalize", "none");
     });
-  }, []);
+  },);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -65,8 +71,10 @@ const Login = () => {
 
     // Validate form data
     const newErrors = {};
-    if (!formData.useremail_hidden_abc) newErrors.useremail_hidden_abc = "Email is required";
-    if (!formData.userpassword_secret) newErrors.userpassword_secret = "Password is required";
+    if (!formData.useremail_hidden_abc)
+      newErrors.useremail_hidden_abc = "Email is required";
+    if (!formData.userpassword_secret)
+      newErrors.userpassword_secret = "Password is required";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -85,11 +93,20 @@ const Login = () => {
       console.log("Login response:", data.clientLogin);
 
       if (data.clientLogin.success) {
-        // Save the token to localStorage
-        localStorage.setItem("token", data.clientLogin.token);
+        // Save the token using AuthContext
+        login(data.clientLogin.token);
+
+        // Store the email in localStorage
+        try {
+          localStorage.setItem("userEmail", data.clientLogin.email);
+          console.log("Email set in localStorage:", data.clientLogin.email);
+        } catch (storageError) {
+          console.error("Error setting email in localStorage:", storageError);
+          // Handle localStorage error (e.g., display a message to the user)
+        }
 
         // Redirect to the dashboard
-        router.push("/protected/productsList");
+        router.push("/dashboard#protected/productsList");
       } else {
         // Display error message from the API
         alert(`Login failed: ${data.clientLogin.message}`);
@@ -103,21 +120,15 @@ const Login = () => {
       }
 
       // Display a user-friendly error message
-      setErrors({ submit: "Login failed. Please check your credentials and try again." });
+      setErrors({
+        submit: "Login failed. Please check your credentials and try again.",
+      });
     }
-  };
-
-  // Logout function
-  const handleLogout = () => {
-    // Clear the token from localStorage
-    localStorage.removeItem("token");
-
-    // Redirect to the login page
-    router.push("/login");
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full pt-[18.5px]">
+      <p>jjawd@gmail.com $ 1234</p>
       <h3 className="text-center text-[#F76300] font-semibold text-lg lg:text-[33.5px] leading-[27px] font-poppins mb-4">
         Login
       </h3>
@@ -126,8 +137,18 @@ const Login = () => {
         <div className="w-full md:w-1/2 flex items-center justify-center bg-white p-6">
           <div className="w-full max-w-md">
             {/* Hidden Dummy Fields to Prevent Autofill */}
-            <input type="text" name="fake-user" autoComplete="off" style={{ display: "none" }} />
-            <input type="password" name="fake-pass" autoComplete="off" style={{ display: "none" }} />
+            <input
+              type="text"
+              name="fake-user"
+              autoComplete="off"
+              style={{ display: "none" }}
+            />
+            <input
+              type="password"
+              name="fake-pass"
+              autoComplete="off"
+              style={{ display: "none" }}
+            />
 
             <form autoComplete="off" onSubmit={handleSubmit}>
               {/* Email Input */}
@@ -146,7 +167,11 @@ const Login = () => {
                   readOnly
                   onFocus={handleFocus}
                 />
-                {errors.useremail_hidden_abc && <p className="text-red-500 text-sm">{errors.useremail_hidden_abc}</p>}
+                {errors.useremail_hidden_abc && (
+                  <p className="text-red-500 text-sm">
+                    {errors.useremail_hidden_abc}
+                  </p>
+                )}
               </div>
 
               {/* Password Input */}
@@ -155,7 +180,12 @@ const Login = () => {
                   <span className="text-red-500">*</span> Password
                 </label>
                 <div className="relative">
-                  <input type="text" name="fake-password" autoComplete="off" style={{ display: "none" }} />
+                  <input
+                    type="text"
+                    name="fake-password"
+                    autoComplete="off"
+                    style={{ display: "none" }}
+                  />
                   <input
                     type={showPassword ? "text" : "password"}
                     name="userpassword_secret"
@@ -167,11 +197,19 @@ const Login = () => {
                     readOnly
                     onFocus={handleFocus}
                   />
-                  <button type="button" className="absolute right-3 top-3 text-gray-500 hover:text-gray-700" onClick={togglePassword}>
+                  <button
+                    type="button"
+                    className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
+                    onClick={togglePassword}
+                  >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
-                {errors.userpassword_secret && <p className="text-red-500 text-sm">{errors.userpassword_secret}</p>}
+                {errors.userpassword_secret && (
+                  <p className="text-red-500 text-sm">
+                    {errors.userpassword_secret}
+                  </p>
+                )}
               </div>
 
               {/* Remember Me Checkbox */}
@@ -194,18 +232,31 @@ const Login = () => {
               </label>
 
               {/* Login Button */}
-              <button type="submit" className="w-full mt-10 bg-orange-500 text-white py-2 cursor-pointer transition" disabled={loading}>
+              <button
+                type="submit"
+                className="w-full mt-10 bg-orange-500 text-white py-2 cursor-pointer transition"
+                disabled={loading}
+              >
                 {loading ? "Loading..." : "Login"}
               </button>
-              {errors.submit && <p className="text-red-500 text-sm mt-2">{errors.submit}</p>}
+              {errors.submit && (
+                <p className="text-red-500 text-sm mt-2">{errors.submit}</p>
+              )}
             </form>
 
             {/* Navigation Buttons */}
             <div className="mt-4 flex flex-row justify-between items-center">
-              <button className="text-sm mb-2" onClick={() => router.push("/register")}>
-                Don’t have an account? <span className="hover:underline text-orange-600">Sign Up</span>
+              <button
+                className="text-sm mb-2"
+                onClick={() => router.push("/register")}
+              >
+                Don’t have an account?{" "}
+                <span className="hover:underline text-orange-600">Sign Up</span>
               </button>
-              <button className="text-orange-600 hover:underline text-sm mb-2" onClick={() => router.push("/forgot-password")}>
+              <button
+                className="text-orange-600 hover:underline text-sm mb-2"
+                onClick={() => router.push("/forgot-password")}
+              >
                 Forgot Password?
               </button>
             </div>
@@ -214,7 +265,10 @@ const Login = () => {
             <div className="shadow-[4px_4px_6px_-2px_rgba(0,0,0,0.4)] py-1 bg-[#fafafa]">
               <p className="text-center mt-2 text-sm">
                 In case of any problem contact us on{" "}
-                <span className="text-orange-500" onClick={() => window.location.href = "tel:0512272649"}>
+                <span
+                  className="text-orange-500"
+                  onClick={() => (window.location.href = "tel:0512272649")}
+                >
                   .(051) 2272649
                 </span>
               </p>
@@ -224,19 +278,15 @@ const Login = () => {
 
         {/* Right Side Image */}
         <div className="w-full md:w-1/2 h-64 md:h-auto relative">
-          <Image src="/login.webp" alt="background" className="w-full h-full object-cover" width={500} height={500} />
+          <Image
+            src="/login.webp"
+            alt="background"
+            className="w-full h-full object-cover"
+            width={500}
+            height={500}
+          />
         </div>
       </div>
-
-      {/* Logout Button (Conditionally Rendered) */}
-      {/* {localStorage.getItem("token") && (
-        <button
-          onClick={handleLogout}
-          className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
-          Logout
-        </button>
-      )} */}
     </div>
   );
 };
