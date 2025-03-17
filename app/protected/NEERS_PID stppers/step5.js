@@ -1,22 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import { getNames } from "country-list";
 import CountryFlag from "country-flag-icons/react/3x2";
+import { CLIENT_UPDATE_STEPPER, CLIENT_GET_STEPPER } from "./graphqlOperation";
 
-export default function Step5({ next, prev }) {
-  // State for "The test is uploaded from" radio buttons
+export default function Step5({ next, prev, productId }) {
+  // Existing state
   const [uploadedFrom, setUploadedFrom] = useState("NEECA Enlisted Lab");
-
-  // State for "Lab Location" radio buttons
   const [labLocation, setLabLocation] = useState("Lab in Pakistan");
-
-  // State for selected country and city
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
 
-  // Get list of countries
-  const countries = getNames();
+  // GraphQL operations
+  const [updateStepper] = useMutation(CLIENT_UPDATE_STEPPER);
+  const { data } = useQuery(CLIENT_GET_STEPPER, {
+    variables: { 
+      productId: productId,
+      stepperType: "lab_information"
+    }
+  });
 
-  // Dummy cities data (replace with actual API or data)
+  // Initialize from API
+  useEffect(() => {
+    if (data?.clientGetStepper?.steps_info) {
+      const stepData = data.clientGetStepper.steps_info.find(
+        step => step.step_number === 5
+      );
+      if (stepData) {
+        setUploadedFrom(stepData.uploadedFrom || "NEECA Enlisted Lab");
+        setLabLocation(stepData.labLocation || "Lab in Pakistan");
+        setSelectedCountry(stepData.selectedCountry || "");
+        setSelectedCity(stepData.selectedCity || "");
+      }
+    }
+  }, [data]);
+
+  // Navigation handler with API integration
+  const handleNavigation = async (direction) => {
+    try {
+      await updateStepper({
+        variables: {
+          productId: productId,
+          action: direction,
+          currentStep: "5",
+          stepperType: "lab_information",
+          stepsInfo: [{
+            step_number: 5,
+            uploadedFrom,
+            labLocation,
+            selectedCountry,
+            selectedCity
+          }]
+        }
+      });
+      direction === 'next' ? next() : prev();
+    } catch (error) {
+      console.error("API Error:", error);
+    }
+  };
+
+  // Rest of your original code remains unchanged
+  const countries = getNames();
   const cities = {
     Pakistan: ["Karachi", "Lahore", "Islamabad"],
     USA: ["New York", "Los Angeles", "Chicago"],

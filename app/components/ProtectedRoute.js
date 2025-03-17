@@ -1,29 +1,43 @@
 "use client";
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { getToken } from '../context/utils/auth';
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import jwtDecode from "jwt-decode";
 
 const ProtectedRoute = ({ children }) => {
   const router = useRouter();
   const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
-    // Client-side check after hydration
-    const token = getToken();
-    
-    if (!token) {
-      router.push('/signin');
-    } else {
-      setIsVerified(true);
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("Authorization");
+
+      if (!token) {
+        console.error("No token found. Redirecting...");
+        console.log(" T bg f bg ndsk" ,token)
+        router.push("/signin");
+      } else {
+        try {
+          const decoded = jwtDecode(token);
+          if (decoded.exp * 1000 < Date.now()) {
+            console.error("Token expired.");
+            localStorage.removeItem("Authorization");
+            router.push("/signin");
+          } else {
+            setIsVerified(true);
+          }
+        } catch (error) {
+          console.error("Invalid token.");
+          localStorage.removeItem("Authorization");
+          router.push("/signin");
+        }
+      }
     }
   }, [router]);
 
-  if (typeof window === 'undefined') {
-    // Server-side: Return null or loading state
-    return null; 
-  }
+  if (!isVerified) return <div>Loading...</div>;
 
-  return isVerified ? children : null;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

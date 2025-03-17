@@ -6,13 +6,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { ApolloClient, InMemoryCache, gql, useMutation } from "@apollo/client";
-
-// Initialize Apollo Client
-const client = new ApolloClient({
-  uri: "https://server.neers.com.pk/graphql",
-  cache: new InMemoryCache(),
-});
+import { gql, useMutation } from "@apollo/client";
 
 // Define the GraphQL mutation for user registration
 const CLIENT_SIGNUP_MUTATION = gql`
@@ -39,19 +33,24 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Apollo Client mutation hook
-  const [clientSignup, { loading, error }] = useMutation(
-    CLIENT_SIGNUP_MUTATION,
-    { client }
-  );
+  const [clientSignup, { loading, error }] = useMutation(CLIENT_SIGNUP_MUTATION);
 
   useEffect(() => {
-    document.querySelectorAll("input").forEach((input) => {
-      input.setAttribute("autocomplete", "off");
-      input.setAttribute("autocorrect", "off");
-      input.setAttribute("spellcheck", "false");
-      input.setAttribute("autocapitalize", "none");
-    });
-  },);
+    // Add a small delay to ensure DOM elements are available
+    const timer = setTimeout(() => {
+      const inputs = document.querySelectorAll("input");
+      if (inputs.length > 0) {
+        inputs.forEach((input) => {
+          input.setAttribute("autocomplete", "off");
+          input.setAttribute("autocorrect", "off");
+          input.setAttribute("spellcheck", "false");
+          input.setAttribute("autocapitalize", "none");
+        });
+      }
+    }); // Short delay to account for rendering timing
+  
+    return () => clearTimeout(timer); // Cleanup timer
+  }, []); // Empty dependency array ensures it only runs once// <-- Added dependency array to run only once
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -67,8 +66,7 @@ const Register = () => {
   };
 
   const togglePassword = () => setShowPassword(!showPassword);
-  const toggleConfirmPassword = () =>
-    setShowConfirmPassword(!showConfirmPassword);
+  const toggleConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -78,8 +76,7 @@ const Register = () => {
     if (!formData.name) newErrors.name = "Name is required";
     if (!formData.email) newErrors.email = "Email is required";
     if (!formData.password) newErrors.password = "Password is required";
-    if (!formData.confirmPassword)
-      newErrors.confirmPassword = "Confirm Password is required";
+    if (!formData.confirmPassword) newErrors.confirmPassword = "Confirm Password is required";
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
     }
@@ -103,13 +100,13 @@ const Register = () => {
       console.log("Registration Response:", data);
 
       if (data.clientSignup.success) {
-        // Store the email in localStorage after successful signup
         try {
-          localStorage.setItem("userEmail", formData.email); // Store the email
-          console.log("Email set in localStorage:", formData.email);
+          if (typeof window !== "undefined") {
+            localStorage.setItem("userEmail", formData.email);
+            console.log("Email set in localStorage:", formData.email);
+          }
         } catch (storageError) {
           console.error("Error setting email in localStorage:", storageError);
-          // Handle localStorage error (e.g., display a message to the user)
         }
 
         alert("Registration successful! Please check your email for the OTP.");
@@ -119,17 +116,6 @@ const Register = () => {
       }
     } catch (err) {
       console.error("Signup Error:", err);
-
-      if (err.graphQLErrors) {
-        console.error("GraphQL Errors:", err.graphQLErrors);
-      }
-      if (err.networkError) {
-        console.error(
-          "Network Error:",
-          err.networkError.result?.errors || err.networkError
-        );
-      }
-
       setErrors({ submit: err.message });
     }
   };

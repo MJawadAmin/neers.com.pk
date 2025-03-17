@@ -1,4 +1,3 @@
-// app/protected/NEERS_PID/steps/step2/FirstComponent.jsx
 "use client"; // Mark this as a Client Component
 
 import React, { useState, useEffect } from "react";
@@ -68,7 +67,7 @@ const FirstComponent = () => {
       const result = await updateStepper({
         variables: {
           action: "update",
-          currentStep: "1",
+          currentStep: data?.clientGetStepper?.current_step || "1",
           stepperType: "product", // Replace with actual stepper type
           stepsInfo: [stepsInfo],
           productId: "NEERS-PID-1", // Replace with actual product ID
@@ -128,39 +127,18 @@ const FirstComponent = () => {
           <label htmlFor="country" className="text-sm font-medium">
             Country<span className="text-red-500">*</span>
           </label>
-          <div className="relative">
-            <Select
-              options={countries}
-              value={selectedCountry}
-              onChange={(selectedOption) => {
-                setSelectedCountry(selectedOption);
-                setSelectedState(null); // Reset state when country changes
-                setSelectedCity(null); // Reset city when country changes
-                setErrors((prev) => ({ ...prev, country: "" })); // Clear country error
-              }}
-              placeholder="Select Country"
-              className="mt-2"
-              styles={{
-                control: (provided) => ({
-                  ...provided,
-                  border: "1px solid #d1d5db", // Match border color
-                  borderRadius: "0.375rem", // Match rounded corners
-                  height: "36px", // Match height
-                  boxShadow: "none", // Remove default box shadow
-                  "&:hover": {
-                    borderColor: "#d1d5db", // Match hover border color
-                  },
-                }),
-                placeholder: (provided) => ({
-                  ...provided,
-                  color: "#9ca3af", // Match placeholder color
-                }),
-              }}
-            />
-          </div>
-          {errors.country && (
-            <div className="text-sm text-red-500">{errors.country}</div>
-          )}
+          <Select
+            options={countries}
+            value={selectedCountry}
+            onChange={(selectedOption) => {
+              setSelectedCountry(selectedOption);
+              setSelectedState(null);
+              setSelectedCity(null);
+              setErrors((prev) => ({ ...prev, country: "" }));
+            }}
+            placeholder="Select Country"
+            className="mt-2"
+          />
         </div>
 
         {/* State Dropdown */}
@@ -168,39 +146,18 @@ const FirstComponent = () => {
           <label htmlFor="state" className="text-sm font-medium">
             State/Province<span className="text-red-500">*</span>
           </label>
-          <div className="relative">
-            <Select
-              options={states}
-              value={selectedState}
-              onChange={(selectedOption) => {
-                setSelectedState(selectedOption);
-                setSelectedCity(null); // Reset city when state changes
-                setErrors((prev) => ({ ...prev, state: "" })); // Clear state error
-              }}
-              placeholder="Select State"
-              isDisabled={!selectedCountry} // Disable if no country is selected
-              className="mt-2"
-              styles={{
-                control: (provided) => ({
-                  ...provided,
-                  border: "1px solid #d1d5db", // Match border color
-                  borderRadius: "0.375rem", // Match rounded corners
-                  height: "36px", // Match height
-                  boxShadow: "none", // Remove default box shadow
-                  "&:hover": {
-                    borderColor: "#d1d5db", // Match hover border color
-                  },
-                }),
-                placeholder: (provided) => ({
-                  ...provided,
-                  color: "#9ca3af", // Match placeholder color
-                }),
-              }}
-            />
-          </div>
-          {errors.state && (
-            <div className="text-sm text-red-500">{errors.state}</div>
-          )}
+          <Select
+            options={states}
+            value={selectedState}
+            onChange={(selectedOption) => {
+              setSelectedState(selectedOption);
+              setSelectedCity(null);
+              setErrors((prev) => ({ ...prev, state: "" }));
+            }}
+            placeholder="Select State"
+            isDisabled={!selectedCountry}
+            className="mt-2"
+          />
         </div>
 
         {/* City Dropdown */}
@@ -208,38 +165,17 @@ const FirstComponent = () => {
           <label htmlFor="city" className="text-sm font-medium">
             City<span className="text-red-500">*</span>
           </label>
-          <div className="relative">
-            <Select
-              options={cities}
-              value={selectedCity}
-              onChange={(selectedOption) => {
-                setSelectedCity(selectedOption);
-                setErrors((prev) => ({ ...prev, city: "" })); // Clear city error
-              }}
-              placeholder="Select City"
-              isDisabled={!selectedState} // Disable if no state is selected
-              className="mt-2"
-              styles={{
-                control: (provided) => ({
-                  ...provided,
-                  border: "1px solid #d1d5db", // Match border color
-                  borderRadius: "0.375rem", // Match rounded corners
-                  height: "36px", // Match height
-                  boxShadow: "none", // Remove default box shadow
-                  "&:hover": {
-                    borderColor: "#d1d5db", // Match hover border color
-                  },
-                }),
-                placeholder: (provided) => ({
-                  ...provided,
-                  color: "#9ca3af", // Match placeholder color
-                }),
-              }}
-            />
-          </div>
-          {errors.city && (
-            <div className="text-sm text-red-500">{errors.city}</div>
-          )}
+          <Select
+            options={cities}
+            value={selectedCity}
+            onChange={(selectedOption) => {
+              setSelectedCity(selectedOption);
+              setErrors((prev) => ({ ...prev, city: "" }));
+            }}
+            placeholder="Select City"
+            isDisabled={!selectedState}
+            className="mt-2"
+          />
         </div>
       </div>
 
@@ -251,15 +187,12 @@ const FirstComponent = () => {
         <textarea
           name="comments"
           id="companyComments"
-          placeholder="company address..."
+          placeholder="Company address..."
           className="mt-2 w-full h-24 border border-zinc-300 rounded p-2 text-black focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
           spellCheck="false"
           value={companyAddress}
           onChange={(e) => setCompanyAddress(e.target.value)}
         ></textarea>
-        {errors.companyAddress && (
-          <div className="text-sm text-red-500">{errors.companyAddress}</div>
-        )}
       </div>
 
       {/* Submit Button */}

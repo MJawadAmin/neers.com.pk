@@ -4,16 +4,9 @@ import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { BiCheckDouble } from "react-icons/bi";
-import { ApolloClient, InMemoryCache, gql, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import AuthContext from "@/app/context/Authcontext";
 
-// Initialize Apollo Client
-const client = new ApolloClient({
-  uri: "https://server.neers.com.pk/graphql", // Your GraphQL API endpoint
-  cache: new InMemoryCache(),
-});
-
-// Define the GraphQL mutation for login
 const CLIENT_LOGIN_MUTATION = gql`
   mutation ClientLogin($email: String!, $password: String!) {
     clientLogin(email: $email, password: $password) {
@@ -30,6 +23,8 @@ const CLIENT_LOGIN_MUTATION = gql`
 const Login = () => {
   const [checked, setChecked] = useState(false);
   const router = useRouter();
+  const { login } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
     useremail_hidden_abc: "",
     userpassword_secret: "",
@@ -38,22 +33,15 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
-  // Apollo Client mutation hook
-  const [clientLogin, { loading, error }] = useMutation(CLIENT_LOGIN_MUTATION, {
-    client,
-  });
-
-  // Use AuthContext
-  const { login } = useContext(AuthContext);
+  const [clientLogin, { loading, error }] = useMutation(CLIENT_LOGIN_MUTATION);
+  
 
   useEffect(() => {
-    document.querySelectorAll("input").forEach((input) => {
-      input.setAttribute("autocomplete", "off");
-      input.setAttribute("autocorrect", "off");
-      input.setAttribute("spellcheck", "false");
-      input.setAttribute("autocapitalize", "none");
-    });
-  },);
+    if (error) {
+      setErrors({ submit: "Login failed. Please check your credentials and try again." });
+    }
+  }, [error]);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -61,74 +49,63 @@ const Login = () => {
   };
 
   const handleFocus = (e) => {
-    setTimeout(() => e.target.removeAttribute("readOnly"), 50);
+    e.target.removeAttribute("readonly");
   };
 
   const togglePassword = () => setShowPassword(!showPassword);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate form data
-    const newErrors = {};
-    if (!formData.useremail_hidden_abc)
-      newErrors.useremail_hidden_abc = "Email is required";
-    if (!formData.userpassword_secret)
-      newErrors.userpassword_secret = "Password is required";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    setErrors({});
+  
+    if (!formData.useremail_hidden_abc || !formData.userpassword_secret) {
+      setErrors({
+        useremail_hidden_abc: !formData.useremail_hidden_abc ? "Email is required" : "",
+        userpassword_secret: !formData.userpassword_secret ? "Password is required" : "",
+      });
       return;
     }
-
+  
     try {
-      // Call the GraphQL mutation
       const { data } = await clientLogin({
         variables: {
           email: formData.useremail_hidden_abc,
           password: formData.userpassword_secret,
         },
       });
-
-      console.log("Login response:", data.clientLogin);
-
-      if (data.clientLogin.success) {
-        // Save the token using AuthContext
-        login(data.clientLogin.token);
-
-        // Store the email in localStorage
-        try {
-          localStorage.setItem("userEmail", data.clientLogin.email);
-          console.log("Email set in localStorage:", data.clientLogin.email);
-        } catch (storageError) {
-          console.error("Error setting email in localStorage:", storageError);
-          // Handle localStorage error (e.g., display a message to the user)
+  
+      if (data?.clientLogin?.success) {
+        const token = data.clientLogin.token;
+  
+        if (token) {
+          console.log("Before saving token:", token); // Debugging
+  
+          // ✅ Fix: Ensure localStorage is accessed on the client side
+          if (typeof window !== "undefined") {
+            localStorage.setItem("authToken", token);
+            localStorage.setItem("userEmail", data.clientLogin.email);
+            console.log("Token saved successfully:", localStorage.getItem("authToken"));
+          }
+  
+          login(token);
+  
+          setTimeout(() => {
+            router.push("/dashboard?section=protected&view=productsList");
+          }, 100);
+        } else {
+          setErrors({ submit: "Login failed: No token received." });
         }
-
-        // Redirect to the dashboard
-        router.push("/dashboard#protected/productsList");
       } else {
-        // Display error message from the API
-        alert(`Login failed: ${data.clientLogin.message}`);
+        setErrors({ submit: `Login failed: ${data.clientLogin.message}` });
       }
     } catch (err) {
-      console.error("Login failed:", err);
-
-      // Log the full error response
-      if (err.networkError && err.networkError.result) {
-        console.error("API Error Response:", err.networkError.result.errors);
-      }
-
-      // Display a user-friendly error message
-      setErrors({
-        submit: "Login failed. Please check your credentials and try again.",
-      });
+      console.error("Login Error:", err);
+      setErrors({ submit: "An unexpected error occurred. Please try again." });
     }
   };
-
+  
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full pt-[18.5px]">
-      <p>jjawd@gmail.com $ 1234</p>
       <h3 className="text-center text-[#F76300] font-semibold text-lg lg:text-[33.5px] leading-[27px] font-poppins mb-4">
         Login
       </h3>
@@ -136,20 +113,6 @@ const Login = () => {
       <div className="flex flex-col md:flex-row h-auto md:h-screen w-full max-w-[91.5vw] shadow-black shadow-2xl rounded-lg overflow-hidden">
         <div className="w-full md:w-1/2 flex items-center justify-center bg-white p-6">
           <div className="w-full max-w-md">
-            {/* Hidden Dummy Fields to Prevent Autofill */}
-            <input
-              type="text"
-              name="fake-user"
-              autoComplete="off"
-              style={{ display: "none" }}
-            />
-            <input
-              type="password"
-              name="fake-pass"
-              autoComplete="off"
-              style={{ display: "none" }}
-            />
-
             <form autoComplete="off" onSubmit={handleSubmit}>
               {/* Email Input */}
               <div className="mb-4">
@@ -168,9 +131,7 @@ const Login = () => {
                   onFocus={handleFocus}
                 />
                 {errors.useremail_hidden_abc && (
-                  <p className="text-red-500 text-sm">
-                    {errors.useremail_hidden_abc}
-                  </p>
+                  <p className="text-red-500 text-sm">{errors.useremail_hidden_abc}</p>
                 )}
               </div>
 
@@ -180,12 +141,6 @@ const Login = () => {
                   <span className="text-red-500">*</span> Password
                 </label>
                 <div className="relative">
-                  <input
-                    type="text"
-                    name="fake-password"
-                    autoComplete="off"
-                    style={{ display: "none" }}
-                  />
                   <input
                     type={showPassword ? "text" : "password"}
                     name="userpassword_secret"
@@ -206,9 +161,7 @@ const Login = () => {
                   </button>
                 </div>
                 {errors.userpassword_secret && (
-                  <p className="text-red-500 text-sm">
-                    {errors.userpassword_secret}
-                  </p>
+                  <p className="text-red-500 text-sm">{errors.userpassword_secret}</p>
                 )}
               </div>
 
@@ -239,40 +192,8 @@ const Login = () => {
               >
                 {loading ? "Loading..." : "Login"}
               </button>
-              {errors.submit && (
-                <p className="text-red-500 text-sm mt-2">{errors.submit}</p>
-              )}
+              {errors.submit && <p className="text-red-500 text-sm mt-2">{errors.submit}</p>}
             </form>
-
-            {/* Navigation Buttons */}
-            <div className="mt-4 flex flex-row justify-between items-center">
-              <button
-                className="text-sm mb-2"
-                onClick={() => router.push("/register")}
-              >
-                Don’t have an account?{" "}
-                <span className="hover:underline text-orange-600">Sign Up</span>
-              </button>
-              <button
-                className="text-orange-600 hover:underline text-sm mb-2"
-                onClick={() => router.push("/forgot-password")}
-              >
-                Forgot Password?
-              </button>
-            </div>
-
-            {/* Contact Information */}
-            <div className="shadow-[4px_4px_6px_-2px_rgba(0,0,0,0.4)] py-1 bg-[#fafafa]">
-              <p className="text-center mt-2 text-sm">
-                In case of any problem contact us on{" "}
-                <span
-                  className="text-orange-500"
-                  onClick={() => (window.location.href = "tel:0512272649")}
-                >
-                  .(051) 2272649
-                </span>
-              </p>
-            </div>
           </div>
         </div>
 
