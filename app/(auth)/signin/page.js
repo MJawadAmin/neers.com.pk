@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { BiCheckDouble } from "react-icons/bi";
 import { gql, useMutation } from "@apollo/client";
 import AuthContext from "@/app/context/Authcontext";
+import { ThumbsUp } from "lucide-react";
+
+ // Add a loader component
 
 const CLIENT_LOGIN_MUTATION = gql`
   mutation ClientLogin($email: String!, $password: String!) {
@@ -34,14 +37,14 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [clientLogin, { loading, error }] = useMutation(CLIENT_LOGIN_MUTATION);
-  
 
   useEffect(() => {
     if (error) {
-      setErrors({ submit: "Login failed. Please check your credentials and try again." });
+      setErrors({ 
+        submit: error.message || "Login failed. Please check your credentials and try again." 
+      });
     }
   }, [error]);
-
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -58,6 +61,7 @@ const Login = () => {
     e.preventDefault();
     setErrors({});
   
+    // Validate inputs
     if (!formData.useremail_hidden_abc || !formData.userpassword_secret) {
       setErrors({
         useremail_hidden_abc: !formData.useremail_hidden_abc ? "Email is required" : "",
@@ -73,37 +77,45 @@ const Login = () => {
           password: formData.userpassword_secret,
         },
       });
-  
-      if (data?.clientLogin?.success) {
-        const token = data.clientLogin.token;
-  
-        if (token) {
-          console.log("Before saving token:", token); // Debugging
-  
-          // ✅ Fix: Ensure localStorage is accessed on the client side
-          if (typeof window !== "undefined") {
+
+      // Validate response structure
+      if (!data?.clientLogin) {
+        throw new Error("Invalid server response");
+      }
+
+      const { success, token, message, email } = data.clientLogin;
+
+      if (success && token) {
+        // Client-side storage handling
+        if (typeof window !== "undefined") {
+          try {
             localStorage.setItem("authToken", token);
-            localStorage.setItem("userEmail", data.clientLogin.email);
-            console.log("Token saved successfully:", localStorage.getItem("authToken"));
+            localStorage.setItem("userEmail", email);
+          } catch (storageError) {
+            console.error("LocalStorage error:", storageError);
+            throw new Error("Failed to save authentication data");
           }
-  
-          login(token);
-  
-          setTimeout(() => {
-            router.push("/dashboard?section=protected&view=productsList");
-          }, 100);
-        } else {
-          setErrors({ submit: "Login failed: No token received." });
         }
+
+        // Update auth context
+        login(token);
+
+        // Redirect with state confirmation
+        setTimeout(() => {
+          router.push("/dashboard?section=protected&view=productsList");
+        }, 150);
+
       } else {
-        setErrors({ submit: `Login failed: ${data.clientLogin.message}` });
+        setErrors({ submit: message || "Authentication failed - no token received" });
       }
     } catch (err) {
       console.error("Login Error:", err);
-      setErrors({ submit: "An unexpected error occurred. Please try again." });
+      setErrors({ 
+        submit: err.message || "An unexpected error occurred. Please try again." 
+      });
     }
   };
-  
+
   return (
     <div className="flex flex-col items-center justify-center h-screen w-full pt-[18.5px]">
       <h3 className="text-center text-[#F76300] font-semibold text-lg lg:text-[33.5px] leading-[27px] font-poppins mb-4">
@@ -129,6 +141,7 @@ const Login = () => {
                   autoComplete="new-password"
                   readOnly
                   onFocus={handleFocus}
+                  disabled={loading}
                 />
                 {errors.useremail_hidden_abc && (
                   <p className="text-red-500 text-sm">{errors.useremail_hidden_abc}</p>
@@ -151,11 +164,13 @@ const Login = () => {
                     autoComplete="new-password"
                     readOnly
                     onFocus={handleFocus}
+                    disabled={loading}
                   />
                   <button
                     type="button"
                     className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
                     onClick={togglePassword}
+                    disabled={loading}
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
@@ -173,26 +188,41 @@ const Login = () => {
                   checked={checked}
                   onChange={() => setChecked(!checked)}
                   className="hidden"
+                  disabled={loading}
                 />
                 <div
                   className={`w-5 h-5 flex items-center justify-center border-2 rounded ${
                     checked ? "bg-orange-500 border-orange-500" : "border-gray-400"
-                  }`}
+                  } ${loading ? "opacity-50" : ""}`}
                 >
                   {checked && <BiCheckDouble size={14} className="text-white" />}
                 </div>
-                <span className="text-gray-700">Remember me</span>
+                <span className={`text-gray-700 ${loading ? "opacity-50" : ""}`}>
+                  Remember me
+                </span>
               </label>
 
               {/* Login Button */}
               <button
                 type="submit"
-                className="w-full mt-10 bg-orange-500 text-white py-2 cursor-pointer transition"
+                className="w-full mt-10 bg-orange-500 text-white py-2 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={loading}
               >
-                {loading ? "Loading..." : "Login"}
+                {loading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <ThumbsUp size="sm" /> {/* Your custom loader component */}
+                    Authenticating...
+                  </div>
+                ) : (
+                  "Login"
+                )}
               </button>
-              {errors.submit && <p className="text-red-500 text-sm mt-2">{errors.submit}</p>}
+              
+              {errors.submit && (
+                <p className="text-red-500 text-sm mt-2 text-center">
+                  {errors.submit}
+                </p>
+              )}
             </form>
           </div>
         </div>
@@ -201,10 +231,11 @@ const Login = () => {
         <div className="w-full md:w-1/2 h-64 md:h-auto relative">
           <Image
             src="/login.webp"
-            alt="background"
+            alt="Login background"
             className="w-full h-full object-cover"
             width={500}
             height={500}
+            priority
           />
         </div>
       </div>

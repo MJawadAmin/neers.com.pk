@@ -35,7 +35,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "codegen.js", "app/protected/NEERS_PID stppers/step2/FirstComponent.jsx"  ],
   "exclude": [
     "node_modules"
   ]

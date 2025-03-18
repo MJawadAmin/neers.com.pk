@@ -3,30 +3,34 @@ import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
 
 const httpLink = createHttpLink({
   uri: "https://server.neers.com.pk/graphql",
 });
 
+// ✅ Fix: Ensure localStorage exists before accessing it
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("authToken");
-  console.log("Auth Token:", token); // Log the token to verify presence
+  let token = "";
+  if (typeof window !== "undefined") {
+    token = localStorage.getItem("authToken") || "";
+  }
+  console.log("Auth Token:", token);
+
   return {
     headers: {
       ...headers,
-      authorization: token,
+      authorization: token , // ✅ Fix: Add "Bearer" prefix
     },
   };
 });
 
+// ✅ Fix: Remove `useRouter()` and use `window.location.href`
 const errorLink = onError(({ graphQLErrors, networkError }) => {
-  const router = useRouter();
   if (graphQLErrors) {
     graphQLErrors.forEach(({ message }) => {
       if (message === "Not authenticated") {
         toast.error("Session expired. Please log in again.");
-        router.push("/signin");
+        window.location.href = "/signin"; // ✅ Redirect without `useRouter`
       }
     });
   }

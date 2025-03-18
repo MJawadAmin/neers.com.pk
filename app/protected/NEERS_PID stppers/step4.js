@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { CLIENT_UPDATE_STEPPER, CLIENT_GET_STEPPER } from "../graphqlOperations";
+import { CLIENT_UPDATE_STEPPER, CLIENT_GET_STEPPER } from "./graphqlOperation";
 
 export default function Step4({ next, prev, productId }) {
   // State management
