@@ -23,10 +23,9 @@ const cities = [
 ];
 
 const FirstComponent = () => {
-  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     companyName: "",
-    companyAddress: "",
+    companyAddress: "Par hoti",
     country: null,
     state: null,
     city: null,
@@ -41,11 +40,16 @@ const FirstComponent = () => {
     fetchPolicy: "network-only",
   });
 
+  // Log response data
+  useEffect(() => {
+    if (data) {
+      console.log("Stepper Data:", data);
+    }
+  }, [data]);
+
   // Initialize form from API response
   useEffect(() => {
     if (data?.clientGetStepper?.steps_info) {
-      setCurrentStep(data?.clientGetStepper?.current_step)
-      console.log("Stepper Data:", data, "\nCurrent step", data?.clientGetStepper?.current_step);
       const stepsInfo = data.clientGetStepper.steps_info || [];
       const applicantInfoData = stepsInfo.find(
         (step) => step.applicantInfo
@@ -54,7 +58,7 @@ const FirstComponent = () => {
       if (applicantInfoData) {
         setFormData({
           companyName: applicantInfoData.company_name || "",
-          companyAddress: applicantInfoData.company_address || "",
+          companyAddress: applicantInfoData.company_address || "Par hoti",
           country: countries.find(c => c.value === applicantInfoData.company_country) || null,
           state: states.find(s => s.value === applicantInfoData.company_province) || null,
           city: cities.find(c => c.value === applicantInfoData.company_city) || null,
@@ -62,24 +66,6 @@ const FirstComponent = () => {
       }
     }
   }, [data]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSelectChange = (name, selectedOption) => {
-    setFormData(prev => ({
-      ...prev,
-      [name]: selectedOption,
-      // Reset dependent fields when parent changes
-      ...(name === 'country' && { state: null, city: null }),
-      ...(name === 'state' && { city: null })
-    }));
-  };
 
   if (loading) return <div className="p-4 text-center">Loading...</div>;
   if (error) return <div className="p-4 text-red-500">Error: {error.message}</div>;
@@ -96,10 +82,9 @@ const FirstComponent = () => {
             a. Name<span className="text-red-500">*</span>
           </label>
           <input
-            name="companyName"
             value={formData.companyName}
-            onChange={handleInputChange}
-            className="w-full h-9 border rounded p-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            readOnly
+            className="w-full h-9 border rounded p-2 border-gray-300 bg-gray-50"
           />
         </div>
 
@@ -111,7 +96,7 @@ const FirstComponent = () => {
           <Select
             options={countries}
             value={formData.country}
-            onChange={(selected) => handleSelectChange('country', selected)}
+            isDisabled
             className="react-select-container"
             classNamePrefix="react-select"
           />
@@ -125,8 +110,7 @@ const FirstComponent = () => {
           <Select
             options={states}
             value={formData.state}
-            onChange={(selected) => handleSelectChange('state', selected)}
-            isDisabled={!formData.country}
+            isDisabled
             className="react-select-container"
             classNamePrefix="react-select"
           />
@@ -140,8 +124,7 @@ const FirstComponent = () => {
           <Select
             options={cities}
             value={formData.city}
-            onChange={(selected) => handleSelectChange('city', selected)}
-            isDisabled={!formData.state}
+            isDisabled
             className="react-select-container"
             classNamePrefix="react-select"
           />
@@ -154,10 +137,9 @@ const FirstComponent = () => {
           b. Address<span className="text-red-500">*</span>
         </label>
         <textarea
-          name="companyAddress"
           value={formData.companyAddress}
-          onChange={handleInputChange}
-          className="w-full h-24 border rounded p-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          readOnly
+          className="w-full h-24 border rounded p-2 border-gray-300 bg-gray-50"
         />
       </div>
     </div>

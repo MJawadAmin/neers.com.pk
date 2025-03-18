@@ -1,45 +1,100 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { GET_STEPPER } from "../../../src/apollo/queries";
+import { useQuery } from "@apollo/client";
 
 const SecondComponent = () => {
+  const [currentStep, setCurrentStep] = useState(1);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
   const [companyName, setCompanyName] = useState("");
   const [errors, setErrors] = useState({});
-  const [companyAddress, setCompanyAddress] = useState("Par hoti");
+  const [companyAddress, setCompanyAddress] = useState("");
   const [phone, setPhone] = useState("");
-  const [isRegistered, setIsRegistered] = useState(false);
-  const [isRegistered1, setIsRegistered1] = useState(false);
+  const [phone1, setPhone1] = useState("");
+  const [phone2, setPhone2] = useState("");
   const [selectedRegions, setSelectedRegions] = useState([]);
-  const [error, setError] = useState("");
+
+  // Query for fetching data
+  const { data, loading, error: queryError } = useQuery(GET_STEPPER, {
+    variables: {
+      productId: "NEERS-PID-1",
+      stepperType: "product",
+    },
+    fetchPolicy: "network-only",
+  });
+
+  // Initialize form from API response
+  useEffect(() => {
+    if (data?.clientGetStepper?.steps_info) {
+      setCurrentStep(data.clientGetStepper.current_step || 1);
+      const stepsInfo = data.clientGetStepper.steps_info || [];
+      const applicantInfoData = stepsInfo.find(
+        (step) => step.applicantInfo
+      )?.applicantInfo;
+
+      if (applicantInfoData) {
+        setSelectedCountry(
+          countries.find(c => c.value === applicantInfoData.company_country) || null
+        );
+        setSelectedState(
+          states.find(s => s.value === applicantInfoData.company_province) || null
+        );
+        setSelectedCity(
+          cities.find(c => c.value === applicantInfoData.company_city) || null
+        );
+        setCompanyName(applicantInfoData.company_name || "");
+        setCompanyAddress(applicantInfoData.company_address || "");
+      }
+    }
+  }, [data]);
 
   // Handle checkbox change
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
-    if (checked) {
-      setSelectedRegions([...selectedRegions, value]); // Add region to selectedRegions
-    } else {
-      setSelectedRegions(selectedRegions.filter((region) => region !== value)); // Remove region from selectedRegions
-    }
-    setError(""); // Clear error when user interacts with checkboxes
+    setSelectedRegions(prev => 
+      checked ? [...prev, value] : prev.filter(region => region !== value)
+    );
+    setError("");
+  };
+
+  // Validate form fields
+  const validateForm = () => {
+    const newErrors = {};
+    if (!companyName.trim()) newErrors.companyName = "Company name is required";
+    if (!selectedCountry) newErrors.country = "Country is required";
+    if (!selectedState) newErrors.state = "State/Province is required";
+    if (!selectedCity) newErrors.city = "City is required";
+    if (!companyAddress.trim()) newErrors.companyAddress = "Company address is required";
+    if (!phone1) newErrors.phone1 = "Factory phone is required";
+    if (!phone2) newErrors.phone2 = "Office phone is required";
+    if (selectedRegions.length === 0) newErrors.regions = "Please select at least 1 region";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   // Handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (selectedRegions.length === 0) {
-      setError("Please select at least 1 of the Sale Network.");
-    } else {
-      setError(""); // Clear error if validation passes
-      console.log("Selected Regions:", selectedRegions);
-      // Proceed with form submission
+    if (validateForm()) {
+      console.log("Form submitted:", {
+        selectedCountry,
+        selectedState,
+        selectedCity,
+        companyName,
+        companyAddress,
+        phone1,
+        phone2,
+        selectedRegions
+      });
     }
   };
 
-  // Static data for countries, states, and cities
+  // Static data
   const countries = [
     { value: "PK", label: "Pakistan" },
     { value: "US", label: "United States" },
@@ -58,44 +113,10 @@ const SecondComponent = () => {
     { value: "San Diego", label: "San Diego" },
   ];
 
-  // Validate form fields
-  const validateForm = () => {
-    const newErrors = {};
+  if (loading) return <div className="p-4 text-center">Loading...</div>;
+  if (queryError) return <div className="p-4 text-red-500">Error: {queryError.message}</div>;
 
-    if (!companyName.trim()) {
-      newErrors.companyName = "Company name is required";
-    }
-    if (!selectedCountry) {
-      newErrors.country = "Country is required";
-    }
-    if (!selectedState) {
-      newErrors.state = "State/Province is required";
-    }
-    if (!selectedCity) {
-      newErrors.city = "City is required";
-    }
-    if (!companyAddress.trim()) {
-      newErrors.companyAddress = "Company address is required";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // Return true if no errors
-  };
-
-  // Handle Next button click
-  const handleNext = () => {
-    if (validateForm()) {
-      // Proceed to the next step if the form is valid
-      console.log("Form is valid, proceed to the next step");
-    }
-  };
-
-  // Handle phone number change
-  const handlePhoneChange = (value) => {
-    setPhone(value);
-    setErrors((prev) => ({ ...prev, phone: "" })); // Clear phone error
-  };
-
+ 
   return (
     <div className="w-full p-10 bg-white rounded-lg border-gray-300 border-1 shadow-md shadow-gray-400">
         
